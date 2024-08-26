@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import src.view.buttons.*;
 
 
-class Toolbar extends JPanel {
+public class Toolbar extends JPanel {
     public static ToolButton selectedTool;
 
     public Toolbar() {

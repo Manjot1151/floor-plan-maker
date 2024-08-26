@@ -2,11 +2,13 @@ package src.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 
-public class ToolButton extends JButton {
+public abstract class ToolButton extends JButton {
     private static Color unselectedColor = new Color(0x4e5090);
     private static Color selectedColor = new Color(0x3a285a);
     public ToolButton(String name) {
@@ -37,4 +39,7 @@ public class ToolButton extends JButton {
             public void mouseExited(java.awt.event.MouseEvent e) {}
         });
     }
+
+    public abstract void onMousePressed(MouseEvent e, Graphics g);
+    public abstract void onMouseReleased(MouseEvent e, Graphics g);
 }
