@@ -7,6 +7,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
+
+import src.view.Drawable;
 
 public abstract class ToolButton extends JButton {
     private static Color unselectedColor = new Color(0x4e5090);
@@ -40,6 +43,6 @@ public abstract class ToolButton extends JButton {
         });
     }
 
-    public abstract void onMousePressed(MouseEvent e, Graphics g);
-    public abstract void onMouseReleased(MouseEvent e, Graphics g);
+    public abstract void onMousePressed(MouseEvent e);
+    public abstract Drawable onMouseReleased(MouseEvent e);
 }

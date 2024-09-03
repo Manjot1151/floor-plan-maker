@@ -20,8 +20,7 @@ public class Toolbar extends JPanel {
 
         JPanel tools = new JPanel();
         tools.setLayout(new FlowLayout());
-        tools.add(new SelectButton());
-        tools.add(new WallButton());
+        tools.add(new RoomButton());
         tools.setBackground(new Color(0xa9aad5));
 
         add(tools, BorderLayout.CENTER);
