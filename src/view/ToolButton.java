@@ -2,14 +2,10 @@ package src.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
-
-import src.view.Drawable;
 
 public abstract class ToolButton extends JButton {
     private static Color unselectedColor = new Color(0x4e5090);

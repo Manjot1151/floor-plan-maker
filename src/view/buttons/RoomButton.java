@@ -1,16 +1,10 @@
 package src.view.buttons;
 
 import java.awt.event.MouseEvent;
-import java.awt.Graphics;
-import java.awt.Shape;
-import java.awt.Rectangle;
-import javax.swing.JComponent;
 
-
-
+import src.view.Drawable;
 import src.view.Room;
 import src.view.ToolButton;
-import src.view.Drawable;
 
 public class RoomButton extends ToolButton {
     private int x1;
@@ -28,9 +22,9 @@ public class RoomButton extends ToolButton {
 
     @Override
     public Drawable onMouseReleased(MouseEvent e) {
-        int width = x1 - e.getX();
-        int height = e.getY() - y1;
+        int width = Math.abs(x1 - e.getX());
+        int height = Math.abs(y1 - e.getY());
 
-        return new Room(x1, y1, width, height);
+        return new Room(Math.min(x1, e.getX()), Math.min(y1, e.getY()), width, height);
     }
 }

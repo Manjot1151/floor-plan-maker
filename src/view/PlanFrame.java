@@ -1,15 +1,6 @@
 package src.view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLayeredPane;
-
-
-import src.view.Grid;
 public class PlanFrame extends JFrame {
     static PlanFrame INSTANCE;
 
@@ -23,7 +14,6 @@ public class PlanFrame extends JFrame {
         setContentPane(new MainPane());
 
         setVisible(true);
-        pack();
     }
 
     public static PlanFrame getInstance() {

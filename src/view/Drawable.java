@@ -14,9 +14,6 @@ public abstract class Drawable extends JComponent {
     public void paintShape(Graphics2D g2d) {
         g2d.setColor(new Color(100, 100, 100, 70));
         Shape shape = getShape();
-        System.out.print("paint ");
-        System.out.print(this.getSize());
-        System.out.println(shape);
         g2d.fill(shape);
     }
 } 

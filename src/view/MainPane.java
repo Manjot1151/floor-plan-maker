@@ -1,8 +1,8 @@
 package src.view;
 
-import java.awt.*;
-import javax.swing.*;
-import src.view.*;
+import java.awt.BorderLayout;
+
+import javax.swing.JPanel;
 
 public class MainPane extends JPanel {
     public MainPane() {
