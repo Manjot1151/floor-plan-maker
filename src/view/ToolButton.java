@@ -2,7 +2,6 @@ package src.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -40,6 +39,6 @@ public abstract class ToolButton extends JButton {
         });
     }
 
-    public abstract void onMousePressed(MouseEvent e, Graphics g);
-    public abstract void onMouseReleased(MouseEvent e, Graphics g);
+    public abstract void onMousePressed(MouseEvent e);
+    public abstract Drawable onMouseReleased(MouseEvent e);
 }
