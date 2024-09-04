@@ -2,13 +2,14 @@ package src.view.buttons;
 
 import java.awt.event.MouseEvent;
 
-import src.view.Drawable;
+import src.view.Canvas;
 import src.view.Room;
 import src.view.ToolButton;
 
 public class RoomButton extends ToolButton {
-    private int x1;
-    private int y1;
+    private int startX;
+    private int startY;
+    private Room currentRoom;
 
     public RoomButton() {
         super("Room");
@@ -16,15 +17,34 @@ public class RoomButton extends ToolButton {
 
     @Override
     public void onMousePressed(MouseEvent e) {
-        x1 = e.getX();
-        y1 = e.getY();
+        startX = Canvas.snapIndicator.x;
+        startY = Canvas.snapIndicator.y;
+        currentRoom = new Room(startX, startY, 0, 0);
+        Canvas.shapesPanel.addShape(currentRoom);
     }
 
     @Override
-    public Drawable onMouseReleased(MouseEvent e) {
-        int width = Math.abs(x1 - e.getX());
-        int height = Math.abs(y1 - e.getY());
+    public void onMouseReleased(MouseEvent e) {
+        updateRoom(Canvas.snapIndicator.x, Canvas.snapIndicator.y);
 
-        return new Room(Math.min(x1, e.getX()), Math.min(y1, e.getY()), width, height);
+        if (Canvas.shapesPanel.isIntersecting(currentRoom)) {
+            Canvas.shapesPanel.removeShape(currentRoom);
+            Canvas.shapesPanel.repaint();
+            currentRoom = null;
+        }
+    }
+
+    @Override
+    public void onMouseDragged(MouseEvent e) {
+        updateRoom(Canvas.snapIndicator.x, Canvas.snapIndicator.y);
+    }
+
+    private void updateRoom(int curX, int curY) {
+        int x = Math.min(startX, curX);
+        int y = Math.min(startY, curY);
+        int width = Math.abs(curX - startX);
+        int height = Math.abs(curY - startY);
+        currentRoom.setBounds(x, y, width, height);
+        Canvas.shapesPanel.repaint();
     }
 }

@@ -15,5 +15,8 @@ public abstract class Drawable extends JComponent {
         g2d.setColor(new Color(100, 100, 100, 70));
         Shape shape = getShape();
         g2d.fill(shape);
+        g2d.setColor(Color.BLACK);
+        g2d.setStroke(new BasicStroke(3));
+        g2d.draw(shape);
     }
 } 

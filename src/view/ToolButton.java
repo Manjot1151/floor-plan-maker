@@ -18,7 +18,7 @@ public abstract class ToolButton extends JButton {
         setFocusable(false);
         addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
+            public void mouseClicked(MouseEvent e) {
                 if (Toolbar.selectedTool == ToolButton.this) {
                     return;
                 }
@@ -29,16 +29,17 @@ public abstract class ToolButton extends JButton {
                 setBackground(selectedColor);
             }
             @Override
-            public void mousePressed(java.awt.event.MouseEvent e) {}
+            public void mousePressed(MouseEvent e) {}
             @Override
-            public void mouseReleased(java.awt.event.MouseEvent e) {}
+            public void mouseReleased(MouseEvent e) {}
             @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {}
+            public void mouseEntered(MouseEvent e) {}
             @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {}
+            public void mouseExited(MouseEvent e) {}
         });
     }
 
     public abstract void onMousePressed(MouseEvent e);
-    public abstract Drawable onMouseReleased(MouseEvent e);
+    public abstract void onMouseReleased(MouseEvent e);
+    public abstract void onMouseDragged(MouseEvent e);
 }
