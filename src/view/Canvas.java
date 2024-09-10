@@ -27,10 +27,10 @@ public class Canvas extends JLayeredPane {
         super();
 
         int gridSize = Config.getInstance().getGridSize();
-
         grid = new Grid(gridSize);
+
         this.shapesPanel = new ShapesPanel(); 
-        this.snapIndicator = new SnapIndicator(gridSize);
+        this.snapIndicator = new SnapIndicator();
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -55,12 +55,12 @@ public class Canvas extends JLayeredPane {
                     Toolbar.selectedTool.onMouseDragged(e);
                 }
 
-                snapIndicator.update(e);
+                snapIndicator.update(e.getPoint());
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                snapIndicator.update(e);
+                snapIndicator.update(e.getPoint());
             }
         });
 
@@ -80,6 +80,7 @@ public class Canvas extends JLayeredPane {
         setLayer(popupsPanel, 2);
         setVisible(true);
     }
+
 
     @Override
     public void doLayout() {

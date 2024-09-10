@@ -13,14 +13,14 @@ import src.view.buttons.*;
 public class Toolbar extends JPanel {
     public static ToolButton selectedTool;
 
-    public Toolbar(Canvas canvas) {
+    public Toolbar(ShapesPanel shapesPanel) {
         super();
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(100, 100));
 
         JPanel tools = new JPanel();
         tools.setLayout(new FlowLayout());
-        tools.add(new RoomButton(canvas));
+        tools.add(new RoomButton(shapesPanel));
         tools.setBackground(new Color(0xa9aad5));
 
         add(tools, BorderLayout.CENTER);

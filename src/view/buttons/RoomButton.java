@@ -2,42 +2,35 @@ package src.view.buttons;
 
 import java.awt.event.MouseEvent;
 
-import src.snap.SnapIndicator;
-import src.view.Canvas;
+import src.snap.SnapCalculator;
 import src.view.Room;
 import src.view.ShapesPanel;
 import src.view.ToolButton;
+import java.awt.Point;
 
 public class RoomButton extends ToolButton {
-    private int startX;
-    private int startY;
+    private Point rectStart;
+    private ShapesPanel shapesPanel;
     private Room currentRoom;
-    private Canvas canvas;
 
-    public RoomButton(Canvas canvas) {
+    public RoomButton(ShapesPanel shapesPanel) {
         super("Room");
-        this.canvas = canvas;
+        this.shapesPanel = shapesPanel;
     }
 
     @Override
     public void onMousePressed(MouseEvent e) {
-        SnapIndicator snapIndicator = canvas.getSnapIndicator();
-        startX = snapIndicator.x;
-        startY = snapIndicator.y;
-        currentRoom = new Room(startX, startY, 0, 0);
-        canvas.getShapesPanel().addShape(currentRoom);
+        rectStart = SnapCalculator.calcSnap(e.getPoint());
+        currentRoom = new Room(rectStart.x, rectStart.y, 0, 0);
+        shapesPanel.addShape(currentRoom);
     }
 
     @Override
     public void onMouseReleased(MouseEvent e) {
-        SnapIndicator snapIndicator = canvas.getSnapIndicator();
-        ShapesPanel shapesPanel = canvas.getShapesPanel();
+        Point rectEnd = SnapCalculator.calcSnap(e.getPoint());
+        updateRoom(rectEnd);
 
-        updateRoom(snapIndicator.x, snapIndicator.y);
-
-        boolean isRoomInvalid = currentRoom.getWidth() == 0 || currentRoom.getHeight() == 0
-                || shapesPanel.isIntersecting(currentRoom);
-
+        boolean isRoomInvalid = currentRoom.getWidth() == 0 || currentRoom.getHeight() == 0 || shapesPanel.isIntersecting(currentRoom);
         if (isRoomInvalid) {
             shapesPanel.removeShape(currentRoom);
             shapesPanel.repaint();
@@ -47,16 +40,15 @@ public class RoomButton extends ToolButton {
 
     @Override
     public void onMouseDragged(MouseEvent e) {
-        SnapIndicator snapIndicator = canvas.getSnapIndicator();
-        updateRoom(snapIndicator.x, snapIndicator.y);
+        updateRoom(SnapCalculator.calcSnap(e.getPoint()));
     }
 
-    private void updateRoom(int curX, int curY) {
-        int x = Math.min(startX, curX);
-        int y = Math.min(startY, curY);
-        int width = Math.abs(curX - startX);
-        int height = Math.abs(curY - startY);
+    private void updateRoom(Point rectEnd) {
+        int x = Math.min(rectStart.x, rectEnd.x);
+        int y = Math.min(rectStart.y, rectEnd.y);
+        int width = Math.abs(rectEnd.x - rectStart.x);
+        int height = Math.abs(rectEnd.y - rectStart.y);
         currentRoom.setBounds(x, y, width, height);
-        canvas.getShapesPanel().repaint();
+        shapesPanel.repaint();
     }
 }
