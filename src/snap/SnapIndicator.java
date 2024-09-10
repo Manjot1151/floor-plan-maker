@@ -1,37 +1,36 @@
-package src.view;
+package src.snap;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 
-import javax.swing.JPanel;
+import javax.swing.JComponent;
 
-public class SnapIndicator extends JPanel {
+public class SnapIndicator extends JComponent {
     public int x;
     public int y;
-    private Grid grid;
-    private boolean toggle = true;
+    private int gridSize;
+    private boolean snap = true;
 
-    public SnapIndicator(Grid grid) {
+    public SnapIndicator(int gridSize) {
         super();
+        this.gridSize = gridSize;
 
-        this.grid = grid;
-        
-        setBounds(grid.getBounds());
-        setSize(grid.getSize());
         setOpaque(false);
         setVisible(true);
     }
 
+    public boolean getSnap() {
+        return snap;
+    }
+
     public void toggleSnap() {
-        toggle = !toggle;
+        snap = !snap;
         repaint();
     }
 
     public void update(MouseEvent e) {
-        int gridSize = grid.getGridSize();
-
         if (e.getX() % gridSize < gridSize - e.getX() % gridSize) {
             this.x = e.getX() - e.getX() % gridSize;
         } else {
@@ -52,13 +51,12 @@ public class SnapIndicator extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
-        if (!toggle) {
+        if (!snap) {
             return;
         }
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(new Color(200, 100, 50, 70));
-        int gridSize = grid.getGridSize();
         g2d.fillArc(x - gridSize / 2, y - gridSize / 2, gridSize, gridSize, 0, 360);
     }
 }

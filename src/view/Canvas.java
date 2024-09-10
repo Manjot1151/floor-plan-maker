@@ -5,6 +5,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+
+import src.snap.SnapIndicator;
 
 public class Canvas extends JLayeredPane {
     public static ShapesPanel shapesPanel;
@@ -47,20 +50,25 @@ public class Canvas extends JLayeredPane {
             }
         });
 
+
         shapesPanel = new ShapesPanel();
         shapesPanel.setLayout(null);
         shapesPanel.setOpaque(false);
 
-        grid = new Grid(20);
+        int gridSize = 20;
 
-        snapIndicator = new SnapIndicator(grid);
+        grid = new Grid(gridSize);
+
+        JPanel popupsPanel = new JPanel();
+        snapIndicator = new SnapIndicator(gridSize);
+        popupsPanel.add(snapIndicator);
 
         add(grid);
         setLayer(grid, 0);
         add(shapesPanel);
         setLayer(shapesPanel, 1);
         add(snapIndicator);
-        setLayer(snapIndicator, 2);
+        setLayer(popupsPanel, 2);
         setVisible(true);
     }
 
