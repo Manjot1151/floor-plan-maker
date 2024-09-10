@@ -27,7 +27,10 @@ public class RoomButton extends ToolButton {
     public void onMouseReleased(MouseEvent e) {
         updateRoom(Canvas.snapIndicator.x, Canvas.snapIndicator.y);
 
-        if (Canvas.shapesPanel.isIntersecting(currentRoom)) {
+        boolean isRoomInvalid = currentRoom.getWidth() == 0 || currentRoom.getHeight() == 0
+                || Canvas.shapesPanel.isIntersecting(currentRoom);
+
+        if (isRoomInvalid) {
             Canvas.shapesPanel.removeShape(currentRoom);
             Canvas.shapesPanel.repaint();
             currentRoom = null;
