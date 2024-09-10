@@ -10,13 +10,27 @@ import javax.swing.JPanel;
 import src.snap.SnapIndicator;
 
 public class Canvas extends JLayeredPane {
-    public static ShapesPanel shapesPanel;
-    public static SnapIndicator snapIndicator;
-    
+    public ShapesPanel shapesPanel;
+    public SnapIndicator snapIndicator;
     private static Grid grid;
+
+
+    public SnapIndicator getSnapIndicator() {
+        return snapIndicator;
+    }
+
+    public ShapesPanel getShapesPanel() {
+        return shapesPanel;
+    }
 
     public Canvas() {
         super();
+
+        int gridSize = Config.getInstance().getGridSize();
+
+        grid = new Grid(gridSize);
+        this.shapesPanel = new ShapesPanel(); 
+        this.snapIndicator = new SnapIndicator(gridSize);
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -55,12 +69,7 @@ public class Canvas extends JLayeredPane {
         shapesPanel.setLayout(null);
         shapesPanel.setOpaque(false);
 
-        int gridSize = 20;
-
-        grid = new Grid(gridSize);
-
         JPanel popupsPanel = new JPanel();
-        snapIndicator = new SnapIndicator(gridSize);
         popupsPanel.add(snapIndicator);
 
         add(grid);

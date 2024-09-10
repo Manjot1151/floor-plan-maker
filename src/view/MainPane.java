@@ -8,13 +8,14 @@ public class MainPane extends JPanel {
     public MainPane() {
         setLayout(new BorderLayout());
 
-        Toolbar toolbar = new Toolbar();
+        Canvas canvas = new Canvas();
+        Toolbar toolbar = new Toolbar(canvas);
 
         JPanel mainPanel = new JPanel();
 
         mainPanel.setLayout(new BorderLayout());
         mainPanel.add(toolbar, BorderLayout.WEST);
-        mainPanel.add(new Canvas(), BorderLayout.CENTER);
+        mainPanel.add(canvas, BorderLayout.CENTER);
         
         add(mainPanel);
     }
