@@ -5,15 +5,32 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+
+import src.snap.SnapIndicator;
 
 public class Canvas extends JLayeredPane {
-    public static ShapesPanel shapesPanel;
-    public static SnapIndicator snapIndicator;
-    
+    public ShapesPanel shapesPanel;
+    public SnapIndicator snapIndicator;
     private static Grid grid;
+
+
+    public SnapIndicator getSnapIndicator() {
+        return snapIndicator;
+    }
+
+    public ShapesPanel getShapesPanel() {
+        return shapesPanel;
+    }
 
     public Canvas() {
         super();
+
+        int gridSize = Config.getInstance().getGridSize();
+        grid = new Grid(gridSize);
+
+        this.shapesPanel = new ShapesPanel(); 
+        this.snapIndicator = new SnapIndicator();
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -38,31 +55,32 @@ public class Canvas extends JLayeredPane {
                     Toolbar.selectedTool.onMouseDragged(e);
                 }
 
-                snapIndicator.update(e);
+                snapIndicator.update(e.getPoint());
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                snapIndicator.update(e);
+                snapIndicator.update(e.getPoint());
             }
         });
+
 
         shapesPanel = new ShapesPanel();
         shapesPanel.setLayout(null);
         shapesPanel.setOpaque(false);
 
-        grid = new Grid(20);
-
-        snapIndicator = new SnapIndicator(grid);
+        JPanel popupsPanel = new JPanel();
+        popupsPanel.add(snapIndicator);
 
         add(grid);
         setLayer(grid, 0);
         add(shapesPanel);
         setLayer(shapesPanel, 1);
         add(snapIndicator);
-        setLayer(snapIndicator, 2);
+        setLayer(popupsPanel, 2);
         setVisible(true);
     }
+
 
     @Override
     public void doLayout() {

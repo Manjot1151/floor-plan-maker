@@ -4,27 +4,19 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import javax.swing.JComponent;
+import src.view.Grid;
 
 public class Grid extends JComponent {
-    private int gridSize;
-
     public Grid(int gridSize) {
         super();
-        this.gridSize = gridSize;
         setVisible(true);
-    }
-
-    public int getGridSize() {
-        return gridSize;
-    }
-
-    public void setGridSize(int gridSize) {
-        this.gridSize = gridSize;    
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.LIGHT_GRAY);
+
+        int gridSize = Config.getInstance().getGridSize();
         int width = getWidth();
         int height = getHeight();
        
