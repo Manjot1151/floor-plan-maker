@@ -12,7 +12,6 @@ public class Config {
         this.gridSize = gridSize; 
     }
 
-
     public static Config getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Config();

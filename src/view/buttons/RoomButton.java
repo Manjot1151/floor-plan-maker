@@ -3,19 +3,20 @@ package src.view.buttons;
 import java.awt.event.MouseEvent;
 
 import src.snap.SnapCalculator;
+import src.view.Canvas;
 import src.view.Room;
 import src.view.ShapesPanel;
 import src.view.ToolButton;
 import java.awt.Point;
 
 public class RoomButton extends ToolButton {
+    private final ShapesPanel shapesPanel = Canvas.getInstance().getShapesPanel();
+
     private Point rectStart;
-    private ShapesPanel shapesPanel;
     private Room currentRoom;
 
-    public RoomButton(ShapesPanel shapesPanel) {
+    public RoomButton() {
         super("Room");
-        this.shapesPanel = shapesPanel;
     }
 
     @Override
@@ -27,8 +28,7 @@ public class RoomButton extends ToolButton {
 
     @Override
     public void onMouseReleased(MouseEvent e) {
-        Point rectEnd = SnapCalculator.calcSnap(e.getPoint());
-        updateRoom(rectEnd);
+        updateRoom(SnapCalculator.calcSnap(e.getPoint()));
 
         boolean isRoomInvalid = currentRoom.getWidth() == 0 || currentRoom.getHeight() == 0 || shapesPanel.isIntersecting(currentRoom);
         if (isRoomInvalid) {
@@ -50,5 +50,10 @@ public class RoomButton extends ToolButton {
         int height = Math.abs(rectEnd.y - rectStart.y);
         currentRoom.setBounds(x, y, width, height);
         shapesPanel.repaint();
+    }
+
+    @Override
+    public void onMouseClicked(MouseEvent e) {
+        
     }
 }

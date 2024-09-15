@@ -13,7 +13,14 @@ public class Canvas extends JLayeredPane {
     public ShapesPanel shapesPanel;
     public SnapIndicator snapIndicator;
     private static Grid grid;
+    private static Canvas INSTANCE;
 
+    public static Canvas getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new Canvas();
+        }
+        return INSTANCE;
+    }
 
     public SnapIndicator getSnapIndicator() {
         return snapIndicator;
@@ -23,16 +30,23 @@ public class Canvas extends JLayeredPane {
         return shapesPanel;
     }
 
-    public Canvas() {
+    private Canvas() {
         super();
 
         int gridSize = Config.getInstance().getGridSize();
         grid = new Grid(gridSize);
 
-        this.shapesPanel = new ShapesPanel(); 
+        this.shapesPanel = new ShapesPanel();
         this.snapIndicator = new SnapIndicator();
 
         addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (Toolbar.selectedTool != null) {
+                    Toolbar.selectedTool.onMouseClicked(e);
+                }
+            }
+            
             @Override
             public void mousePressed(MouseEvent e) {
                 if (Toolbar.selectedTool != null) {
@@ -54,7 +68,7 @@ public class Canvas extends JLayeredPane {
                 if (Toolbar.selectedTool != null) {
                     Toolbar.selectedTool.onMouseDragged(e);
                 }
-
+                
                 snapIndicator.update(e.getPoint());
             }
 
