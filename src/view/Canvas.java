@@ -8,6 +8,8 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import src.snap.SnapIndicator;
+import src.view.panels.ButtonsPanel;
+import src.view.panels.ShapesPanel;
 
 public class Canvas extends JLayeredPane {
     public ShapesPanel shapesPanel;
@@ -42,22 +44,22 @@ public class Canvas extends JLayeredPane {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (Toolbar.selectedTool != null) {
-                    Toolbar.selectedTool.onMouseClicked(e);
+                if (ButtonsPanel.selectedTool != null) {
+                    ButtonsPanel.selectedTool.onMouseClicked(e);
                 }
             }
             
             @Override
             public void mousePressed(MouseEvent e) {
-                if (Toolbar.selectedTool != null) {
-                    Toolbar.selectedTool.onMousePressed(e);
+                if (ButtonsPanel.selectedTool != null) {
+                    ButtonsPanel.selectedTool.onMousePressed(e);
                 }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (Toolbar.selectedTool != null) {
-                    Toolbar.selectedTool.onMouseReleased(e);
+                if (ButtonsPanel.selectedTool != null) {
+                    ButtonsPanel.selectedTool.onMouseReleased(e);
                 }
             }
         });
@@ -65,8 +67,8 @@ public class Canvas extends JLayeredPane {
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (Toolbar.selectedTool != null) {
-                    Toolbar.selectedTool.onMouseDragged(e);
+                if (ButtonsPanel.selectedTool != null) {
+                    ButtonsPanel.selectedTool.onMouseDragged(e);
                 }
                 
                 snapIndicator.update(e.getPoint());

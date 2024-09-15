@@ -4,7 +4,7 @@ import java.awt.Point;
 import src.view.Config;
 
 public class SnapCalculator {
-    private static boolean shouldSnap = true;
+    private static boolean shouldSnap = false;
 
     // public static void setSnapEnabled(boolean shouldSnap) {
     //     SnapCalculator.shouldSnap = shouldSnap;

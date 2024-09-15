@@ -5,8 +5,9 @@ import java.awt.event.MouseEvent;
 import src.snap.SnapCalculator;
 import src.view.Canvas;
 import src.view.Room;
-import src.view.ShapesPanel;
 import src.view.ToolButton;
+import src.view.panels.ShapesPanel;
+
 import java.awt.Point;
 
 public class RoomButton extends ToolButton {

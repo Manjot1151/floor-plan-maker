@@ -4,8 +4,10 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 
+import src.view.panels.ButtonsPanel;
+
 public class MainPane extends JPanel {
-    private Toolbar toolbar;
+    private ButtonsPanel buttonsPanel;
     private Canvas canvas;
 
     public Canvas getCanvas() {
@@ -16,11 +18,11 @@ public class MainPane extends JPanel {
         setLayout(new BorderLayout());
 
         canvas = Canvas.getInstance();
-        toolbar = new Toolbar(canvas.getShapesPanel());
+        buttonsPanel = new ButtonsPanel(canvas.getShapesPanel());
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(toolbar, BorderLayout.WEST);
+        mainPanel.add(buttonsPanel, BorderLayout.WEST);
         mainPanel.add(canvas, BorderLayout.CENTER);
         
         add(mainPanel);

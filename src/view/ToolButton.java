@@ -7,6 +7,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 
+import src.view.panels.ButtonsPanel;
+
 public abstract class ToolButton extends JButton {
     private static Color unselectedColor = new Color(0x4e5090);
     private static Color selectedColor = new Color(0x3a285a);
@@ -20,15 +22,15 @@ public abstract class ToolButton extends JButton {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (Toolbar.selectedTool == ToolButton.this) {
-                    Toolbar.selectedTool.setBackground(unselectedColor);
-                    Toolbar.selectedTool = null;
+                if (ButtonsPanel.selectedTool == ToolButton.this) {
+                    ButtonsPanel.selectedTool.setBackground(unselectedColor);
+                    ButtonsPanel.selectedTool = null;
                     return;
                 }
-                if (Toolbar.selectedTool != null) {
-                    Toolbar.selectedTool.setBackground(unselectedColor);
+                if (ButtonsPanel.selectedTool != null) {
+                    ButtonsPanel.selectedTool.setBackground(unselectedColor);
                 }
-                Toolbar.selectedTool = ToolButton.this;
+                ButtonsPanel.selectedTool = ToolButton.this;
                 setBackground(selectedColor);
             }
         });

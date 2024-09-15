@@ -7,8 +7,8 @@ import java.util.List;
 import src.snap.SnapCalculator;
 import src.view.Canvas;
 import src.view.Drawable;
-import src.view.ShapesPanel;
 import src.view.ToolButton;
+import src.view.panels.ShapesPanel;
 
 public class MoveButton extends ToolButton {
     private final ShapesPanel shapesPanel = Canvas.getInstance().getShapesPanel();
