@@ -41,9 +41,13 @@ public class Canvas extends JLayeredPane {
         this.shapesPanel = new ShapesPanel();
         this.snapIndicator = new SnapIndicator();
 
-        addMouseListener(new MouseAdapter() {
+        JPanel glassPane = new ShapesPanel();
+        glassPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                Drawable shape = shapesPanel.getClickedShape(e.getPoint());
+                System.out.println(shape);
+
                 if (ButtonsPanel.selectedTool != null) {
                     ButtonsPanel.selectedTool.onMouseClicked(e);
                 }
@@ -64,7 +68,7 @@ public class Canvas extends JLayeredPane {
             }
         });
 
-        addMouseMotionListener(new MouseAdapter() {
+        glassPane.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (ButtonsPanel.selectedTool != null) {
@@ -80,20 +84,30 @@ public class Canvas extends JLayeredPane {
             }
         });
 
+        glassPane.setOpaque(false);
+        glassPane.setVisible(true);
 
         shapesPanel = new ShapesPanel();
         shapesPanel.setLayout(null);
         shapesPanel.setOpaque(false);
 
+        JPanel spritesPanel = new JPanel();
+        spritesPanel.add(snapIndicator);
+        spritesPanel.setOpaque(false);
+
         JPanel popupsPanel = new JPanel();
-        popupsPanel.add(snapIndicator);
+        popupsPanel.setOpaque(false);
 
         add(grid);
         setLayer(grid, 0);
         add(shapesPanel);
         setLayer(shapesPanel, 1);
-        add(snapIndicator);
-        setLayer(popupsPanel, 2);
+        add(spritesPanel);
+        setLayer(spritesPanel, 2);
+        add(glassPane);
+        setLayer(glassPane, 3);
+        add(popupsPanel);
+        setLayer(popupsPanel, 4);
         setVisible(true);
     }
 
