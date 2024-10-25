@@ -2,10 +2,16 @@ package org.lays.view.buttons;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 
 import org.lays.snap.SnapCalculator;
 import org.lays.view.Canvas;
+import org.lays.view.Config;
 import org.lays.view.Drawable;
 import org.lays.view.ToolButton;
 import org.lays.view.panels.ShapesPanel;
@@ -13,7 +19,8 @@ import org.lays.view.panels.ShapesPanel;
 public class MoveButton extends ToolButton {
     private final ShapesPanel shapesPanel = Canvas.getInstance().getShapesPanel();
     private Point start;
-    
+    private HashMap<Drawable, Point> shapeStarts = new HashMap<>();
+
     public MoveButton() {
         super("Move");
     }
@@ -26,6 +33,7 @@ public class MoveButton extends ToolButton {
     @Override
     public void onMousePressed(MouseEvent e) {
         start = SnapCalculator.calcSnap(e.getPoint());
+        shapesPanel.getSelectedShapes().forEach(shape -> shapeStarts.put(shape, new Point(shape.getX(), shape.getY())));
     }
 
     @Override
@@ -35,7 +43,19 @@ public class MoveButton extends ToolButton {
 
     @Override
     public void onMouseReleased(MouseEvent e) {
-        moveShapes(e.getPoint());
+        for (Drawable shape : shapesPanel.getSelectedShapes()) {
+            if (shapesPanel.isIntersecting(shape)) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Moving shapes back to their previous location...",
+                        "Overlap Detected",
+                        JOptionPane.ERROR_MESSAGE);
+                shapesPanel.getSelectedShapes().forEach(s -> s.setLocation(shapeStarts.get(s)));
+                break;
+            }
+        }
+        shapesPanel.repaint();
+        shapeStarts.clear();
     }
 
     public void moveShapes(Point p) {
@@ -43,14 +63,12 @@ public class MoveButton extends ToolButton {
         Point end = SnapCalculator.calcSnap(p);
         int dx = end.x - start.x;
         int dy = end.y - start.y;
-        shapesPanel.getSelectedShapes().forEach(shape -> shape.setLocation(shape.getX() + dx, shape.getY() + dy));
-        for (Drawable shape : selectedShapes) {
-            if (shapesPanel.isIntersecting(shape)) {
-                shapesPanel.getSelectedShapes().forEach(s -> s.setLocation(s.getX() - dx, s.getY() - dy));
-                return;
-            }
-        }
+
+        shapesPanel.getSelectedShapes()
+                .forEach(shape -> shape.setLocation((int) shapeStarts.get(shape).getX() + dx,
+                        (int) shapeStarts.get(shape).getY() + dy));
+
         shapesPanel.repaint();
-        start = end;
+        // start = end;
     }
 }
