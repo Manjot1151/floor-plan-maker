@@ -13,8 +13,8 @@ import org.lays.view.panels.ButtonsPanel;
 import org.lays.view.panels.ShapesPanel;
 
 public class Canvas extends JLayeredPane {
-    public ShapesPanel shapesPanel;
-    public SnapIndicator snapIndicator;
+    private ShapesPanel shapesPanel;
+    private SnapIndicator snapIndicator;
     private static Grid grid;
     private static Canvas INSTANCE;
 
@@ -102,6 +102,8 @@ public class Canvas extends JLayeredPane {
 
         JPanel popupsPanel = new JPanel();
         popupsPanel.setOpaque(false);
+
+        add(snapIndicator);
 
         add(grid);
         setLayer(grid, 0);
