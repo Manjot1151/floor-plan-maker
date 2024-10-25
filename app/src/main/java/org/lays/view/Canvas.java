@@ -53,21 +53,21 @@ public class Canvas extends JLayeredPane {
                     roomPopup.show(Canvas.this, e.getX(), e.getY());
                 }
 
-                if (ButtonsPanel.selectedTool != null) {
+                if (ButtonsPanel.selectedTool != null && SwingUtilities.isLeftMouseButton(e)) {
                     ButtonsPanel.selectedTool.onMouseClicked(e);
                 }
             }
             
             @Override
             public void mousePressed(MouseEvent e) {
-                if (ButtonsPanel.selectedTool != null) {
+                if (ButtonsPanel.selectedTool != null && SwingUtilities.isLeftMouseButton(e)) {
                     ButtonsPanel.selectedTool.onMousePressed(e);
                 }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (ButtonsPanel.selectedTool != null) {
+                if (ButtonsPanel.selectedTool != null && SwingUtilities.isLeftMouseButton(e)) {
                     ButtonsPanel.selectedTool.onMouseReleased(e);
                 }
             }
@@ -76,7 +76,7 @@ public class Canvas extends JLayeredPane {
         glassPane.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (ButtonsPanel.selectedTool != null) {
+                if (ButtonsPanel.selectedTool != null && SwingUtilities.isLeftMouseButton(e)) {
                     ButtonsPanel.selectedTool.onMouseDragged(e);
                 }
                 
