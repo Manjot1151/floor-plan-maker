@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import src.snap.SnapIndicator;
 import src.view.panels.ButtonsPanel;
@@ -46,7 +47,11 @@ public class Canvas extends JLayeredPane {
             @Override
             public void mouseClicked(MouseEvent e) {
                 Drawable shape = shapesPanel.getClickedShape(e.getPoint());
-                System.out.println(shape);
+                
+                if (shape instanceof Room && SwingUtilities.isRightMouseButton(e)) {
+                    RoomPopup roomPopup = new RoomPopup((Room)shape);
+                    roomPopup.show(Canvas.this, e.getX(), e.getY());
+                }
 
                 if (ButtonsPanel.selectedTool != null) {
                     ButtonsPanel.selectedTool.onMouseClicked(e);
