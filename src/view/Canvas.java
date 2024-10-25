@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import src.snap.SnapIndicator;
 import src.view.panels.ButtonsPanel;
@@ -41,9 +42,17 @@ public class Canvas extends JLayeredPane {
         this.shapesPanel = new ShapesPanel();
         this.snapIndicator = new SnapIndicator();
 
-        addMouseListener(new MouseAdapter() {
+        JPanel glassPane = new ShapesPanel();
+        glassPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                Drawable shape = shapesPanel.getClickedShape(e.getPoint());
+                
+                if (shape instanceof Room && SwingUtilities.isRightMouseButton(e)) {
+                    RoomPopup roomPopup = new RoomPopup((Room)shape);
+                    roomPopup.show(Canvas.this, e.getX(), e.getY());
+                }
+
                 if (ButtonsPanel.selectedTool != null) {
                     ButtonsPanel.selectedTool.onMouseClicked(e);
                 }
@@ -64,7 +73,7 @@ public class Canvas extends JLayeredPane {
             }
         });
 
-        addMouseMotionListener(new MouseAdapter() {
+        glassPane.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (ButtonsPanel.selectedTool != null) {
@@ -80,20 +89,30 @@ public class Canvas extends JLayeredPane {
             }
         });
 
+        glassPane.setOpaque(false);
+        glassPane.setVisible(true);
 
         shapesPanel = new ShapesPanel();
         shapesPanel.setLayout(null);
         shapesPanel.setOpaque(false);
 
+        JPanel spritesPanel = new JPanel();
+        spritesPanel.add(snapIndicator);
+        spritesPanel.setOpaque(false);
+
         JPanel popupsPanel = new JPanel();
-        popupsPanel.add(snapIndicator);
+        popupsPanel.setOpaque(false);
 
         add(grid);
         setLayer(grid, 0);
         add(shapesPanel);
         setLayer(shapesPanel, 1);
-        add(snapIndicator);
-        setLayer(popupsPanel, 2);
+        add(spritesPanel);
+        setLayer(spritesPanel, 2);
+        add(glassPane);
+        setLayer(glassPane, 3);
+        add(popupsPanel);
+        setLayer(popupsPanel, 4);
         setVisible(true);
     }
 
