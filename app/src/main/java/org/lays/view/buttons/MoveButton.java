@@ -3,15 +3,10 @@ package org.lays.view.buttons;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
-import java.util.List;
 
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
-
 import org.lays.snap.SnapCalculator;
 import org.lays.view.Canvas;
-import org.lays.view.Config;
 import org.lays.view.Drawable;
 import org.lays.view.ToolButton;
 import org.lays.view.panels.ShapesPanel;
@@ -59,7 +54,6 @@ public class MoveButton extends ToolButton {
     }
 
     public void moveShapes(Point p) {
-        List<Drawable> selectedShapes = shapesPanel.getSelectedShapes();
         Point end = SnapCalculator.calcSnap(p);
         int dx = end.x - start.x;
         int dy = end.y - start.y;
@@ -69,6 +63,5 @@ public class MoveButton extends ToolButton {
                         (int) shapeStarts.get(shape).getY() + dy));
 
         shapesPanel.repaint();
-        // start = end;
     }
 }
