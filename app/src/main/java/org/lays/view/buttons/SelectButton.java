@@ -20,6 +20,7 @@ public class SelectButton extends ToolButton {
         Drawable clickedShape = shapesPanel.getClickedShape(SnapCalculator.calcSnap(e.getPoint()));
         if (clickedShape == null) {
             shapesPanel.getShapes().forEach(shape -> shape.setSelected(false));
+            shapesPanel.repaint();
             return;
         }
 
@@ -37,6 +38,8 @@ public class SelectButton extends ToolButton {
         shapesPanel.getShapes().forEach(shape -> shape.setSelected(false));
         
         // TODO: Implement selection box
+        
+        shapesPanel.repaint();
     }
 
     @Override
