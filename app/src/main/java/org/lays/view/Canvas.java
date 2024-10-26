@@ -96,25 +96,14 @@ public class Canvas extends JLayeredPane {
         shapesPanel.setLayout(null);
         shapesPanel.setOpaque(false);
 
-        JPanel spritesPanel = new JPanel();
-        spritesPanel.add(snapIndicator);
-        spritesPanel.setOpaque(false);
-
-        JPanel popupsPanel = new JPanel();
-        popupsPanel.setOpaque(false);
-
         add(snapIndicator);
 
         add(grid);
         setLayer(grid, 0);
         add(shapesPanel);
         setLayer(shapesPanel, 1);
-        add(spritesPanel);
-        setLayer(spritesPanel, 2);
         add(glassPane);
-        setLayer(glassPane, 3);
-        add(popupsPanel);
-        setLayer(popupsPanel, 4);
+        setLayer(glassPane, 2);
         setVisible(true);
     }
 
