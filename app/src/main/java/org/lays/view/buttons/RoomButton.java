@@ -2,9 +2,12 @@ package org.lays.view.buttons;
 
 import java.awt.event.MouseEvent;
 
+import javax.swing.JComboBox;
+
 import org.lays.snap.SnapCalculator;
 import org.lays.view.Canvas;
 import org.lays.view.Room;
+import org.lays.view.RoomType;
 import org.lays.view.ToolButton;
 import org.lays.view.panels.ShapesPanel;
 
@@ -15,15 +18,25 @@ public class RoomButton extends ToolButton {
 
     private Point rectStart;
     private Room currentRoom;
+    private RoomType currentRoomType;
+    private static JComboBox<RoomType> roomTypeComboBox;
 
     public RoomButton() {
         super("Room");
+
+        roomTypeComboBox = new JComboBox<>(RoomType.values());
+        this.currentRoomType = (RoomType) roomTypeComboBox.getSelectedItem();
+        roomTypeComboBox.addActionListener(e -> this.currentRoomType = (RoomType) roomTypeComboBox.getSelectedItem());
+    }
+
+    public static JComboBox<RoomType> getRoomTypeComboBox() {
+        return roomTypeComboBox;
     }
 
     @Override
     public void onMousePressed(MouseEvent e) {
         rectStart = SnapCalculator.calcSnap(e.getPoint());
-        currentRoom = new Room(rectStart.x, rectStart.y, 0, 0);
+        currentRoom = new Room(rectStart.x, rectStart.y, 0, 0, currentRoomType);
         shapesPanel.addShape(currentRoom);
     }
 
