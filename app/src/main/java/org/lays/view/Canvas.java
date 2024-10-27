@@ -10,10 +10,10 @@ import javax.swing.SwingUtilities;
 
 import org.lays.snap.SnapIndicator;
 import org.lays.view.panels.ButtonsPanel;
-import org.lays.view.panels.ShapesPanel;
+import org.lays.view.panels.RoomsPanel;
 
 public class Canvas extends JLayeredPane {
-    private ShapesPanel shapesPanel;
+    private RoomsPanel roomsPanel;
     private SnapIndicator snapIndicator;
     private static Grid grid;
     private static Canvas INSTANCE;
@@ -29,8 +29,8 @@ public class Canvas extends JLayeredPane {
         return snapIndicator;
     }
 
-    public ShapesPanel getShapesPanel() {
-        return shapesPanel;
+    public RoomsPanel getRoomsPanel() {
+        return roomsPanel;
     }
 
     private Canvas() {
@@ -39,17 +39,20 @@ public class Canvas extends JLayeredPane {
         int gridSize = Config.getInstance().getGridSize();
         grid = new Grid(gridSize);
 
-        this.shapesPanel = new ShapesPanel();
+        this.roomsPanel = new RoomsPanel();
+        roomsPanel.setOpaque(false);
+        roomsPanel.setVisible(true);
+    
         this.snapIndicator = new SnapIndicator();
 
-        JPanel glassPane = new ShapesPanel();
+        JPanel glassPane = new RoomsPanel();
         glassPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Drawable shape = shapesPanel.getClickedShape(e.getPoint());
+                Room room = roomsPanel.getClickedRoom(e.getPoint());
                 
-                if (shape instanceof Room && SwingUtilities.isRightMouseButton(e)) {
-                    RoomPopup roomPopup = new RoomPopup((Room)shape);
+                if (room != null && SwingUtilities.isRightMouseButton(e)) {
+                    RoomPopup roomPopup = new RoomPopup(room);
                     roomPopup.show(Canvas.this, e.getX(), e.getY());
                 }
 
@@ -92,16 +95,12 @@ public class Canvas extends JLayeredPane {
         glassPane.setOpaque(false);
         glassPane.setVisible(true);
 
-        shapesPanel = new ShapesPanel();
-        shapesPanel.setLayout(null);
-        shapesPanel.setOpaque(false);
-
         add(snapIndicator);
 
         add(grid);
         setLayer(grid, 0);
-        add(shapesPanel);
-        setLayer(shapesPanel, 1);
+        add(roomsPanel);
+        setLayer(roomsPanel, 1);
         add(glassPane);
         setLayer(glassPane, 2);
         setVisible(true);

@@ -8,11 +8,12 @@ import javax.swing.JOptionPane;
 import org.lays.snap.SnapCalculator;
 import org.lays.view.Canvas;
 import org.lays.view.Drawable;
+import org.lays.view.Room;
 import org.lays.view.ToolButton;
-import org.lays.view.panels.ShapesPanel;
+import org.lays.view.panels.RoomsPanel;
 
 public class MoveButton extends ToolButton {
-    private final ShapesPanel shapesPanel = Canvas.getInstance().getShapesPanel();
+    private final RoomsPanel shapesPanel = Canvas.getInstance().getRoomsPanel();
     private Point start;
     private HashMap<Drawable, Point> shapeStarts = new HashMap<>();
 
@@ -28,7 +29,7 @@ public class MoveButton extends ToolButton {
     @Override
     public void onMousePressed(MouseEvent e) {
         start = SnapCalculator.calcSnap(e.getPoint());
-        shapesPanel.getSelectedShapes().forEach(shape -> shapeStarts.put(shape, new Point(shape.getX(), shape.getY())));
+        shapesPanel.getSelectedRooms().forEach(shape -> shapeStarts.put(shape, new Point(shape.getX(), shape.getY())));
     }
 
     @Override
@@ -38,14 +39,14 @@ public class MoveButton extends ToolButton {
 
     @Override
     public void onMouseReleased(MouseEvent e) {
-        for (Drawable shape : shapesPanel.getSelectedShapes()) {
+        for (Room shape : shapesPanel.getSelectedRooms()) {
             if (shapesPanel.isIntersecting(shape)) {
                 JOptionPane.showMessageDialog(
                         null,
                         "Moving shapes back to their previous location...",
                         "Overlap Detected",
                         JOptionPane.ERROR_MESSAGE);
-                shapesPanel.getSelectedShapes().forEach(s -> s.setLocation(shapeStarts.get(s)));
+                shapesPanel.getSelectedRooms().forEach(s -> s.setLocation(shapeStarts.get(s)));
                 break;
             }
         }
@@ -58,7 +59,7 @@ public class MoveButton extends ToolButton {
         int dx = end.x - start.x;
         int dy = end.y - start.y;
 
-        shapesPanel.getSelectedShapes()
+        shapesPanel.getSelectedRooms()
                 .forEach(shape -> shape.setLocation((int) shapeStarts.get(shape).getX() + dx,
                         (int) shapeStarts.get(shape).getY() + dy));
 

@@ -4,12 +4,12 @@ import java.awt.event.MouseEvent;
 
 import org.lays.snap.SnapCalculator;
 import org.lays.view.Canvas;
-import org.lays.view.Drawable;
+import org.lays.view.Room;
 import org.lays.view.ToolButton;
-import org.lays.view.panels.ShapesPanel;
+import org.lays.view.panels.RoomsPanel;
 
 public class SelectButton extends ToolButton {
-    private final ShapesPanel shapesPanel = Canvas.getInstance().getShapesPanel();
+    private final RoomsPanel roomsPanel = Canvas.getInstance().getRoomsPanel();
     
     public SelectButton() {
         super("Select");
@@ -17,15 +17,15 @@ public class SelectButton extends ToolButton {
 
     @Override
     public void onMouseClicked(MouseEvent e) {
-        Drawable clickedShape = shapesPanel.getClickedShape(SnapCalculator.calcSnap(e.getPoint()));
-        if (clickedShape == null) {
-            shapesPanel.getShapes().forEach(shape -> shape.setSelected(false));
-            shapesPanel.repaint();
+        Room clickedRoom = roomsPanel.getClickedRoom(SnapCalculator.calcSnap(e.getPoint()));
+        if (clickedRoom == null) {
+            roomsPanel.getRooms().forEach(shape -> shape.setSelected(false));
+            roomsPanel.repaint();
             return;
         }
 
-        clickedShape.setSelected(!clickedShape.isSelected());
-        shapesPanel.repaint();
+        clickedRoom.setSelected(!clickedRoom.isSelected());
+        roomsPanel.repaint();
     }
 
     @Override
@@ -35,11 +35,11 @@ public class SelectButton extends ToolButton {
 
     @Override
     public void onMouseDragged(MouseEvent e) {
-        shapesPanel.getShapes().forEach(shape -> shape.setSelected(false));
+        roomsPanel.getRooms().forEach(shape -> shape.setSelected(false));
         
         // TODO: Implement selection box
         
-        shapesPanel.repaint();
+        roomsPanel.repaint();
     }
 
     @Override
