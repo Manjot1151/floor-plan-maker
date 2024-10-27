@@ -43,6 +43,7 @@ public class ButtonsPanel extends JPanel {
         tools.add(new SelectButton());
         tools.add(new MoveButton());
         tools.add(new RoomButton());
+        tools.add(new DoorButton());
 
         // togglables
         togglables.add(new SnapButton());

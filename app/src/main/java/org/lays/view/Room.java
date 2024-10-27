@@ -18,7 +18,23 @@ public class Room extends Drawable {
         setBounds(new Rectangle(x, y, width, height));
         this.roomType = type;
     }
- 
+
+    public boolean isOnHorizontalEdge(Point point) {
+        Rectangle roomBounds = getBounds();
+        return (
+            point.x >= roomBounds.getMinX() && point.x <= roomBounds.getMaxX() && 
+            (point.y == roomBounds.getMinY() || point.y == roomBounds.getMaxY())
+        );
+    }
+
+    public boolean isOnVerticalEdge(Point point) {
+        Rectangle roomBounds = getBounds();
+        return (
+            point.y >= roomBounds.getMinY() && point.y <= roomBounds.getMaxY() && 
+            (point.x == roomBounds.getMinX() || point.x == roomBounds.getMaxX())
+        );
+    }
+
     @Override 
     public Shape getShape() {
         return getBounds();
