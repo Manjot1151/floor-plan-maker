@@ -11,11 +11,13 @@ import javax.swing.SwingUtilities;
 import org.lays.snap.SnapIndicator;
 import org.lays.view.panels.ButtonsPanel;
 import org.lays.view.panels.RoomsPanel;
+import org.lays.view.panels.SpritesPanel;
 
 public class Canvas extends JLayeredPane {
     private RoomsPanel roomsPanel;
     private SnapIndicator snapIndicator;
-    private static Grid grid;
+    private SpritesPanel spritesPanel;
+    private Grid grid;
     private static Canvas INSTANCE;
 
     public static Canvas getInstance() {
@@ -33,6 +35,10 @@ public class Canvas extends JLayeredPane {
         return roomsPanel;
     }
 
+    public SpritesPanel getSpritesPanel() {
+        return spritesPanel;
+    }
+
     private Canvas() {
         super();
 
@@ -40,9 +46,13 @@ public class Canvas extends JLayeredPane {
         grid = new Grid(gridSize);
 
         this.roomsPanel = new RoomsPanel();
+        roomsPanel.setLayout(null);
         roomsPanel.setOpaque(false);
-        roomsPanel.setVisible(true);
-    
+
+        this.spritesPanel = new SpritesPanel();
+        spritesPanel.setLayout(null);
+        spritesPanel.setOpaque(false);
+
         this.snapIndicator = new SnapIndicator();
 
         JPanel glassPane = new RoomsPanel();
@@ -91,7 +101,6 @@ public class Canvas extends JLayeredPane {
                 snapIndicator.update(e.getPoint());
             }
         });
-
         glassPane.setOpaque(false);
         glassPane.setVisible(true);
 
@@ -101,8 +110,10 @@ public class Canvas extends JLayeredPane {
         setLayer(grid, 0);
         add(roomsPanel);
         setLayer(roomsPanel, 1);
+        add(spritesPanel);
+        setLayer(spritesPanel,2);
         add(glassPane);
-        setLayer(glassPane, 2);
+        setLayer(glassPane, 3);
         setVisible(true);
     }
 
