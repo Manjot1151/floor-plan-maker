@@ -3,33 +3,37 @@ package org.lays.view.panels;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JPanel;
 
 import org.lays.view.Drawable;
 
-public class SpritesPanel extends JPanel {
-    private static ArrayList<Drawable> sprites;
-
-    public SpritesPanel() {
+public class SpritesLayer {
+    private ArrayList<Drawable> sprites;
+    private JPanel view;
+    
+    public SpritesLayer(JPanel view) {
         super();
-        setLayout(null);
         sprites = new ArrayList<Drawable>();
+        this.view = view;
     }
 
-    public void addSprite(Drawable sprite) {
+    public JPanel getView() {
+        return view;
+    }
+
+    public void add(Drawable sprite) {
         sprites.add(sprite);
-        sprite.setVisible(true);
+        sprite.setVisible(false);
 
-        repaint();
+        view.repaint();
     }
 
-    public void removeSprite(Drawable sprite) {
+    public void remove(Drawable sprite) {
         sprites.remove(sprite);
         sprite.setVisible(false);
 
-        repaint();
+        view.repaint();
     }
 
     // public boolean isIntersecting(Drawable shape) {
@@ -54,10 +58,10 @@ public class SpritesPanel extends JPanel {
     //     return null;
     // }
 
-    public List<Drawable> getSprites() {
+    public ArrayList<Drawable> getSprites() {
         return sprites;
     }
-
+    
     // public List<Drawable> getSelectedShapes() {
     //     List<Drawable> selectedShapes = new ArrayList<Drawable>();
     //     for (Drawable s : sprites) {
@@ -68,9 +72,8 @@ public class SpritesPanel extends JPanel {
     //     return selectedShapes;
     // }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        for (Drawable s : sprites) {
+    public void paintLayer(Graphics g) {
+        for (Drawable s: sprites) {
             Graphics2D g2d = (Graphics2D)g.create();
             s.paintShape(g2d);
             g2d.dispose();

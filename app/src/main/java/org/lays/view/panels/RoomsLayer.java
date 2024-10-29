@@ -4,36 +4,39 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
 import org.lays.view.Drawable;
 import org.lays.view.Room;
 
-public class RoomsPanel extends JPanel {
-    private static ArrayList<Room> rooms;
+public class RoomsLayer {
+    private ArrayList<Room> rooms;
+    private JPanel view;
 
-    public RoomsPanel() {
-        super();
-        setLayout(null);
+    public RoomsLayer(JPanel view) {
         rooms = new ArrayList<Room>();
+        this.view = view;
     }
 
-    public void addRoom(Room room) {
+    public JPanel getView() {
+        return view;
+    }
+
+    public void add(Room room) {
         rooms.add(room);
         room.setVisible(true);
 
-        repaint();
+        view.repaint();
     }
 
-    public void removeRoom(Room room) {
+    public void remove(Room room) {
         rooms.remove(room);
         room.setVisible(false);
 
-        repaint();
+        view.repaint();
     }
+
 
     public boolean isIntersecting(Drawable targetRoom) {
         for (Drawable room : rooms) {
@@ -71,19 +74,11 @@ public class RoomsPanel extends JPanel {
         return selectedShapes;
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        Rectangle bounds = g.getClipBounds();
-        BufferedImage bufferedImage = new BufferedImage((int)bounds.getWidth(), (int)bounds.getHeight(), BufferedImage.TYPE_INT_ARGB);
-
-        Graphics gbuf = bufferedImage.createGraphics();
+    public void paintLayer(Graphics g) {
         for (Room room : rooms) {
-            Graphics2D g2d = (Graphics2D) gbuf.create();
+            Graphics2D g2d = (Graphics2D)g.create();
             room.paintShape(g2d);
             g2d.dispose();
         }
-
-        Graphics2D g2d = (Graphics2D)g;
-        g2d.drawImage(bufferedImage,0, 0,this);
     }
 }

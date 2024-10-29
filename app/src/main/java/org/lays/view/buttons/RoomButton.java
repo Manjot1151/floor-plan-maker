@@ -9,12 +9,12 @@ import org.lays.view.Canvas;
 import org.lays.view.Room;
 import org.lays.view.RoomType;
 import org.lays.view.ToolButton;
-import org.lays.view.panels.RoomsPanel;
+import org.lays.view.panels.RoomsLayer;
 
 import java.awt.Point;
 
 public class RoomButton extends ToolButton {
-    private final RoomsPanel roomsPanel = Canvas.getInstance().getRoomsPanel();
+    private final RoomsLayer roomsLayer = Canvas.getInstance().getRoomsLayer();
 
     private Point rectStart;
     private Room currentRoom;
@@ -37,17 +37,17 @@ public class RoomButton extends ToolButton {
     public void onMousePressed(MouseEvent e) {
         rectStart = SnapCalculator.calcSnap(e.getPoint());
         currentRoom = new Room(rectStart.x, rectStart.y, 0, 0, currentRoomType);
-        roomsPanel.addRoom(currentRoom);
+        roomsLayer.add(currentRoom);
     }
 
     @Override
     public void onMouseReleased(MouseEvent e) {
         updateRoom(SnapCalculator.calcSnap(e.getPoint()));
 
-        boolean isRoomInvalid = currentRoom.getWidth() == 0 || currentRoom.getHeight() == 0 || roomsPanel.isIntersecting(currentRoom);
+        boolean isRoomInvalid = currentRoom.getWidth() == 0 || currentRoom.getHeight() == 0 || roomsLayer.isIntersecting(currentRoom);
         if (isRoomInvalid) {
-            roomsPanel.removeRoom(currentRoom);
-            roomsPanel.repaint();
+            roomsLayer.remove(currentRoom);
+            roomsLayer.getView().repaint();
             currentRoom = null;
         }
     }
@@ -63,7 +63,7 @@ public class RoomButton extends ToolButton {
         int width = Math.abs(rectEnd.x - rectStart.x);
         int height = Math.abs(rectEnd.y - rectStart.y);
         currentRoom.setBounds(x, y, width, height);
-        roomsPanel.repaint();
+        roomsLayer.getView().repaint();
     }
 
     @Override

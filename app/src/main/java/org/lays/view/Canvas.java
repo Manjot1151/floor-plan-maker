@@ -10,13 +10,13 @@ import javax.swing.SwingUtilities;
 
 import org.lays.snap.SnapIndicator;
 import org.lays.view.panels.ButtonsPanel;
-import org.lays.view.panels.RoomsPanel;
-import org.lays.view.panels.SpritesPanel;
+import org.lays.view.panels.GraphicsPanel;
+import org.lays.view.panels.RoomsLayer;
+import org.lays.view.panels.SpritesLayer;
 
 public class Canvas extends JLayeredPane {
-    private RoomsPanel roomsPanel;
+    private GraphicsPanel graphicsPanel;
     private SnapIndicator snapIndicator;
-    private SpritesPanel spritesPanel;
     private Grid grid;
     private static Canvas INSTANCE;
 
@@ -26,17 +26,21 @@ public class Canvas extends JLayeredPane {
         }
         return INSTANCE;
     }
+    
+    public GraphicsPanel getGraphicsPanel() {
+        return graphicsPanel;
+    }
 
     public SnapIndicator getSnapIndicator() {
         return snapIndicator;
     }
 
-    public RoomsPanel getRoomsPanel() {
-        return roomsPanel;
+    public RoomsLayer getRoomsLayer() {
+        return graphicsPanel.getRoomsLayer();
     }
 
-    public SpritesPanel getSpritesPanel() {
-        return spritesPanel;
+    public SpritesLayer getSpritesLayer() {
+        return graphicsPanel.getSpritesLayer();
     }
 
     private Canvas() {
@@ -45,21 +49,17 @@ public class Canvas extends JLayeredPane {
         int gridSize = Config.getInstance().getGridSize();
         grid = new Grid(gridSize);
 
-        this.roomsPanel = new RoomsPanel();
-        roomsPanel.setLayout(null);
-        roomsPanel.setOpaque(false);
-
-        this.spritesPanel = new SpritesPanel();
-        spritesPanel.setLayout(null);
-        spritesPanel.setOpaque(false);
+        this.graphicsPanel = new GraphicsPanel();
+        graphicsPanel.setOpaque(false);
+        graphicsPanel.setVisible(true);
 
         this.snapIndicator = new SnapIndicator();
 
-        JPanel glassPane = new RoomsPanel();
+        JPanel glassPane = new GraphicsPanel();
         glassPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Room room = roomsPanel.getClickedRoom(e.getPoint());
+                Room room = Canvas.this.getRoomsLayer().getClickedRoom(e.getPoint());
                 
                 if (room != null && SwingUtilities.isRightMouseButton(e)) {
                     RoomPopup roomPopup = new RoomPopup(room);
@@ -108,12 +108,10 @@ public class Canvas extends JLayeredPane {
 
         add(grid);
         setLayer(grid, 0);
-        add(roomsPanel);
-        setLayer(roomsPanel, 1);
-        add(spritesPanel);
-        setLayer(spritesPanel,2);
+        add(graphicsPanel);
+        setLayer(graphicsPanel, 1);
         add(glassPane);
-        setLayer(glassPane, 3);
+        setLayer(glassPane, 2);
         setVisible(true);
     }
 

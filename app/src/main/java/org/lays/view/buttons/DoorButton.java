@@ -7,25 +7,25 @@ import java.awt.event.MouseEvent;
 import org.lays.snap.SnapCalculator;
 import org.lays.view.ToolButton;
 import org.lays.view.Door;
-import org.lays.view.panels.RoomsPanel;
-import org.lays.view.panels.SpritesPanel;
+import org.lays.view.panels.RoomsLayer;
+import org.lays.view.panels.SpritesLayer;
 import org.lays.view.Canvas;
 import org.lays.view.Room;
 
 public class DoorButton extends ToolButton {
-    private SpritesPanel spritesPanel = Canvas.getInstance().getSpritesPanel();
-    private RoomsPanel roomsPanel = Canvas.getInstance().getRoomsPanel();
+    private SpritesLayer spritesPanel = Canvas.getInstance().getSpritesLayer();
+    private RoomsLayer roomsPanel = Canvas.getInstance().getRoomsLayer();
     private Door currentDoor;
 
     public DoorButton() {
-        super("Wall");
+        super("Door");
     }
 
     @Override
     public void onMousePressed(MouseEvent e) {
         Point start = SnapCalculator.calcSnap(e.getPoint());
         this.currentDoor = new Door(start, start);
-        spritesPanel.addSprite(currentDoor);
+        spritesPanel.add(currentDoor);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class DoorButton extends ToolButton {
 
     private void updateLine(Point end) {
         currentDoor.setEnd(end);
-        spritesPanel.repaint();
+        spritesPanel.getView().repaint();
     }
 
     private void validateWall() {
@@ -67,8 +67,7 @@ public class DoorButton extends ToolButton {
         invalidate = invalidate || n_intersects == 0;
 
         if (invalidate) {
-            spritesPanel.removeSprite(currentDoor);
-            spritesPanel.repaint();
+            spritesPanel.remove(currentDoor);
         }
     }
 
