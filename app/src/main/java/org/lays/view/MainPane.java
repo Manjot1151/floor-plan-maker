@@ -18,7 +18,7 @@ public class MainPane extends JPanel {
         setLayout(new BorderLayout());
 
         canvas = Canvas.getInstance();
-        buttonsPanel = new ButtonsPanel(canvas.getShapesPanel());
+        buttonsPanel = new ButtonsPanel();
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());

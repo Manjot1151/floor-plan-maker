@@ -14,7 +14,7 @@ import org.lays.view.buttons.*;
 public class ButtonsPanel extends JPanel {
     public static ToolButton selectedTool;
 
-    public ButtonsPanel(ShapesPanel shapesPanel) {
+    public ButtonsPanel() {
         super();
         setLayout(new BorderLayout());
         setBackground(new Color(0xa9aad5));
@@ -43,6 +43,7 @@ public class ButtonsPanel extends JPanel {
         tools.add(new SelectButton());
         tools.add(new MoveButton());
         tools.add(new RoomButton());
+        tools.add(new DoorButton());
 
         // togglables
         togglables.add(new SnapButton());

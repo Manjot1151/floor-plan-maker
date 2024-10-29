@@ -4,12 +4,13 @@ import java.awt.event.MouseEvent;
 
 import org.lays.snap.SnapCalculator;
 import org.lays.view.Canvas;
-import org.lays.view.Drawable;
+import org.lays.view.Room;
 import org.lays.view.ToolButton;
-import org.lays.view.panels.ShapesPanel;
+import org.lays.view.panels.GraphicsPanel;
+import org.lays.view.panels.RoomsLayer;
 
 public class SelectButton extends ToolButton {
-    private final ShapesPanel shapesPanel = Canvas.getInstance().getShapesPanel();
+    private final GraphicsPanel graphicsPanel = Canvas.getInstance().getGraphicsPanel();
     
     public SelectButton() {
         super("Select");
@@ -17,15 +18,16 @@ public class SelectButton extends ToolButton {
 
     @Override
     public void onMouseClicked(MouseEvent e) {
-        Drawable clickedShape = shapesPanel.getClickedShape(SnapCalculator.calcSnap(e.getPoint()));
-        if (clickedShape == null) {
-            shapesPanel.getShapes().forEach(shape -> shape.setSelected(false));
-            shapesPanel.repaint();
+        RoomsLayer roomsLayer = graphicsPanel.getRoomsLayer();
+        Room clickedRoom = roomsLayer.getClickedRoom(SnapCalculator.calcSnap(e.getPoint()));
+        if (clickedRoom == null) {
+            roomsLayer.getRooms().forEach(shape -> shape.setSelected(false));
+            graphicsPanel.repaint();
             return;
         }
 
-        clickedShape.setSelected(!clickedShape.isSelected());
-        shapesPanel.repaint();
+        clickedRoom.setSelected(!clickedRoom.isSelected());
+        graphicsPanel.repaint();
     }
 
     @Override
@@ -35,11 +37,12 @@ public class SelectButton extends ToolButton {
 
     @Override
     public void onMouseDragged(MouseEvent e) {
-        shapesPanel.getShapes().forEach(shape -> shape.setSelected(false));
+        RoomsLayer rooms = graphicsPanel.getRoomsLayer();
+        rooms.getRooms().forEach(shape -> shape.setSelected(false));
         
         // TODO: Implement selection box
         
-        shapesPanel.repaint();
+        graphicsPanel.repaint();
     }
 
     @Override
