@@ -1,7 +1,6 @@
 package org.lays.view.panels;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 
@@ -76,9 +75,7 @@ public class RoomsLayer {
 
     public void paintLayer(Graphics g) {
         for (Room room : rooms) {
-            Graphics2D g2d = (Graphics2D)g.create();
-            room.paintShape(g2d);
-            g2d.dispose();
+            room.paintShape(g);
         }
     }
 }

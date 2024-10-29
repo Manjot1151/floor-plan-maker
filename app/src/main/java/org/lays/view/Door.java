@@ -1,7 +1,8 @@
 package org.lays.view;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
-import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
@@ -10,7 +11,6 @@ import java.awt.geom.Line2D;
 public class Door extends Drawable {
     private Point start;
     private Point end;
-    private static Color wallColor = new Color(0,0,255);
     private static BasicStroke wallStroke = new BasicStroke(3);
 
     public boolean isVertical() {
@@ -54,10 +54,12 @@ public class Door extends Drawable {
 
 
     @Override
-    public void paintShape(Graphics2D g2d) {
+    public void paintShape(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g.create();
         g2d.setStroke(wallStroke);
-        g2d.setColor(wallColor);
+        g2d.setComposite(AlphaComposite.Clear);
 
         g2d.draw(getShape());
+        g2d.dispose();
     }
 }

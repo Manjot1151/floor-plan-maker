@@ -74,9 +74,7 @@ public class SpritesLayer {
 
     public void paintLayer(Graphics g) {
         for (Drawable s: sprites) {
-            Graphics2D g2d = (Graphics2D)g.create();
-            s.paintShape(g2d);
-            g2d.dispose();
+            s.paintShape(g);
         }
     }
 }

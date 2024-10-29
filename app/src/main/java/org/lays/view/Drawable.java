@@ -1,6 +1,6 @@
 package org.lays.view;
 
-import java.awt.Graphics2D;
+import java.awt.Graphics;
 import java.awt.Shape;
 import javax.swing.JComponent;
 
@@ -21,5 +21,5 @@ public abstract class Drawable extends JComponent {
         return getBounds().intersects(drawable.getBounds());
     }
 
-    public abstract void paintShape(Graphics2D g2d);
+    public abstract void paintShape(Graphics g2d);
 } 

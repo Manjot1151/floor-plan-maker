@@ -2,6 +2,7 @@ package org.lays.view;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -48,7 +49,9 @@ public class Room extends Drawable {
         return roomType.getColor();
     }
 
-    public void paintShape(Graphics2D g2d) {
+    public void paintShape(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g.create();
+
         g2d.setColor(new Color(100, 100, 100, 70));
         if (this instanceof Room) {
             g2d.setColor(((Room) this).getColor());
@@ -64,9 +67,11 @@ public class Room extends Drawable {
         }
         Shape shape = getShape();
         g2d.fill(shape);
-        g2d.setColor(Color.PINK);
+        g2d.setColor(Color.BLACK);
         g2d.setStroke(new BasicStroke(3));
         g2d.draw(shape);
+
+        g2d.dispose();
     }
 
 }
