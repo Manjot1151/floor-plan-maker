@@ -1,7 +1,6 @@
 package org.lays.view.buttons;
 
 import java.awt.Point;
-import java.awt.Shape;
 import java.awt.event.MouseEvent;
 
 import org.lays.snap.SnapCalculator;
@@ -13,8 +12,8 @@ import org.lays.view.Canvas;
 import org.lays.view.Room;
 
 public class DoorButton extends ToolButton {
-    private SpritesLayer spritesPanel = Canvas.getInstance().getSpritesLayer();
-    private RoomsLayer roomsPanel = Canvas.getInstance().getRoomsLayer();
+    private static SpritesLayer spritesPanel = Canvas.getInstance().getSpritesLayer();
+    private static RoomsLayer roomsPanel = Canvas.getInstance().getRoomsLayer();
     private Door currentDoor;
 
     public DoorButton() {
@@ -31,7 +30,9 @@ public class DoorButton extends ToolButton {
     @Override
     public void onMouseReleased(MouseEvent e) {
         updateLine(SnapCalculator.calcSnap(e.getPoint()));
-        validateWall();
+        if (!isDoorValid(currentDoor)) {
+            spritesPanel.remove(currentDoor);
+        };
     }
 
     private void updateLine(Point end) {
@@ -39,36 +40,41 @@ public class DoorButton extends ToolButton {
         spritesPanel.getView().repaint();
     }
 
-    private void validateWall() {
-        Shape line = currentDoor.getShape();
+    public static boolean isValidDoorOnRoom(Door door, Room room) {
+        boolean checkVertical = 
+            door.isVertical() && 
+            room.isOnVerticalEdge(door.getStart()) && 
+            room.isOnVerticalEdge(door.getEnd());
+
+        boolean checkHorizontal = 
+            door.isHorizontal() && 
+            room.isOnHorizontalEdge(door.getStart()) && 
+            room.isOnHorizontalEdge(door.getEnd());
+        
+        return checkHorizontal ^ checkVertical;
+    }
+    
+    public static boolean isDoorValid(Door door) {
+        if (door.isPoint()) {
+            return false;
+        }
 
         int n_intersects = 0;
-        boolean invalidate = false;
+        boolean isValid = true;
         for (Room room : roomsPanel.getRooms()) {
-            if (line.intersects(room.getBounds())) {
+            if (door.intersects(room)) {
                 n_intersects += 1;
-                boolean checkVertical = 
-                    currentDoor.isVertical() && 
-                    room.isOnVerticalEdge(currentDoor.getStart()) && 
-                    room.isOnVerticalEdge(currentDoor.getEnd());
 
-                boolean checkHorizontal = 
-                    currentDoor.isHorizontal() && 
-                    room.isOnHorizontalEdge(currentDoor.getStart()) && 
-                    room.isOnHorizontalEdge(currentDoor.getEnd());
-
-                if (!checkHorizontal && !checkVertical) {
-                    invalidate = true;
+                if (!isValidDoorOnRoom(door, room)) {
+                    isValid = false;
                     break;
                 }
             }
         }
 
-        invalidate = invalidate || n_intersects == 0;
+        isValid = isValid && n_intersects != 0;
 
-        if (invalidate) {
-            spritesPanel.remove(currentDoor);
-        }
+        return isValid;
     }
 
     @Override

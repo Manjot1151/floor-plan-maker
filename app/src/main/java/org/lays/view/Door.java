@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 import java.awt.geom.Line2D;
 
 public class Door extends Drawable {
@@ -27,6 +28,10 @@ public class Door extends Drawable {
     public Point getEnd() {
         return end;
     }
+
+    public boolean isPoint() {
+        return isVertical() && isHorizontal();
+    }
     
     public Door(Point start, Point end) {
         this.start = start;
@@ -41,6 +46,10 @@ public class Door extends Drawable {
         } else {
             return new Point(start.x, end.y);
         }
+    }
+
+    public boolean intersects(Room room)   {
+        return getShape().intersects((Rectangle2D)room.getShape());
     }
 
     public void setEnd(Point end) {
