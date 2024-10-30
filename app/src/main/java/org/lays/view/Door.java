@@ -5,14 +5,17 @@ import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.Line2D;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Line2D;
+import java.awt.Rectangle;
 
 public class Door extends Drawable {
     private Point start;
     private Point end;
-    private static BasicStroke wallStroke = new BasicStroke(3);
+    private static int wallThickness = 3;
+    private static BasicStroke wallStroke = new BasicStroke(wallThickness);
+    private static final int padding = 10;
 
     public boolean isVertical() {
         return start.x == end.x;
@@ -32,6 +35,22 @@ public class Door extends Drawable {
     public boolean isPoint() {
         return isVertical() && isHorizontal();
     }
+
+    public int getMinX() {
+        return Math.min(start.x, end.x);
+    }
+
+    public int getMaxX() {
+        return Math.max(start.x, end.x);
+    }
+
+    public int getMinY() {
+        return Math.min(start.y, end.y);
+    }
+
+    public int getMaxY() {
+        return Math.max(start.y, end.y);
+    }
     
     public Door(Point start, Point end) {
         this.start = start;
@@ -49,7 +68,7 @@ public class Door extends Drawable {
     }
 
     public boolean intersects(Room room)   {
-        return getShape().intersects((Rectangle2D)room.getShape());
+        return getHitBox().intersects((Rectangle2D)room.getHitBox());
     }
 
     public void setEnd(Point end) {
@@ -57,10 +76,22 @@ public class Door extends Drawable {
     }
 
     @Override
-    public Shape getShape() {
-        return new Line2D.Float(start, end);
+    public Shape getHitBox() {
+        if (isVertical()) {
+            return new Rectangle(start.x - padding, getMinY() + wallThickness, 2 * padding, Math.abs(start.y - end.y) - (2*wallThickness));
+        } else {
+            return new Rectangle(getMinX() + wallThickness, start.y - padding, Math.abs(start.x - end.x) - (2*wallThickness), 2*padding);
+        }
     }
 
+    @Override
+    public Shape getVisibleShape() {
+        if (isVertical()) {
+            return new Line2D.Float(start.x, getMinY() + wallThickness, start.x, getMaxY() - wallThickness);
+        } else {
+            return new Line2D.Float(getMinX() + wallThickness, start.y, getMaxX() - wallThickness, start.y);
+        }
+    }
 
     @Override
     public void paintShape(Graphics g) {
@@ -68,7 +99,7 @@ public class Door extends Drawable {
         g2d.setStroke(wallStroke);
         g2d.setComposite(AlphaComposite.Clear);
 
-        g2d.draw(getShape());
+        g2d.draw(getVisibleShape());
         g2d.dispose();
     }
 }
