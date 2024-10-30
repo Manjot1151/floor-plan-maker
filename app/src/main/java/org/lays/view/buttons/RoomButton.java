@@ -25,6 +25,7 @@ public class RoomButton extends ToolButton {
         super("Room");
 
         roomTypeComboBox = new JComboBox<>(RoomType.values());
+        roomTypeComboBox.setFocusable(false);
         this.currentRoomType = (RoomType) roomTypeComboBox.getSelectedItem();
         roomTypeComboBox.addActionListener(e -> this.currentRoomType = (RoomType) roomTypeComboBox.getSelectedItem());
     }

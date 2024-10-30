@@ -18,22 +18,22 @@ public class ButtonsPanel extends JPanel {
         super();
         setLayout(new BorderLayout());
         setBackground(new Color(0xa9aad5));
-        setPreferredSize(new Dimension(150, 500));
+        setPreferredSize(new Dimension(150, 1000));
         
         JPanel tools = new JPanel();
         tools.setLayout(new FlowLayout());
-        tools.setPreferredSize(new Dimension(150, 200));
+        tools.setPreferredSize(new Dimension(150, 300));
         tools.setOpaque(false);
-
-        JPanel options = new JPanel();
-        options.setLayout(new FlowLayout());
-        options.setPreferredSize(new Dimension(150, 200));
-        options.setOpaque(false);
 
         JPanel togglables = new JPanel();
         togglables.setLayout(new FlowLayout());
         togglables.setPreferredSize(new Dimension(150, 200));
         togglables.setOpaque(false);
+
+        JPanel options = new JPanel();
+        options.setLayout(new FlowLayout());
+        options.setPreferredSize(new Dimension(150, 300));
+        options.setOpaque(false);
 
         add(tools, BorderLayout.NORTH);
         add(togglables, BorderLayout.CENTER);
@@ -44,6 +44,7 @@ public class ButtonsPanel extends JPanel {
         tools.add(new MoveButton());
         tools.add(new RoomButton());
         tools.add(new DoorButton());
+        tools.add(new AlignButton());
 
         // togglables
         togglables.add(new SnapButton());

@@ -59,13 +59,6 @@ public class Canvas extends JLayeredPane {
         glassPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Room room = Canvas.this.getRoomsLayer().getClickedRoom(e.getPoint());
-                
-                if (room != null && SwingUtilities.isRightMouseButton(e)) {
-                    RoomPopup roomPopup = new RoomPopup(room);
-                    roomPopup.show(Canvas.this, e.getX(), e.getY());
-                }
-
                 if (ButtonsPanel.selectedTool != null && SwingUtilities.isLeftMouseButton(e)) {
                     ButtonsPanel.selectedTool.onMouseClicked(e);
                 }
