@@ -57,6 +57,11 @@ public class Door extends Drawable {
         setEnd(end);
     }
 
+    public Door(int startX, int startY, int endX, int endY) {
+        this.start = new Point(startX, startY);
+        setEnd(new Point(endX, endY));
+    }
+
     private Point calcOrthoEnd(Point start, Point end) {
         int dispY = end.x - start.x;
         int dispX = end.y - start.y;
@@ -71,8 +76,18 @@ public class Door extends Drawable {
         return getHitBox().intersects((Rectangle2D)room.getHitBox());
     }
 
+    public boolean intersects(Door door)   {
+        boolean areInSameOrientation = (this.isHorizontal() && door.isHorizontal()) || (this.isVertical() && door.isVertical());
+        return areInSameOrientation && this.getLine().intersectsLine(door.getLine());
+    }
+
+
     public void setEnd(Point end) {
         this.end = calcOrthoEnd(start, end);
+    }
+
+    public Line2D getLine() {
+        return new Line2D.Float(start, end);
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.lays.view.panels.RoomsLayer;
 import org.lays.view.panels.SpritesLayer;
 import org.lays.view.Canvas;
 import org.lays.view.Room;
+import java.util.ArrayList;
 
 public class DoorButton extends ToolButton {
     private static SpritesLayer spritesPanel = Canvas.getInstance().getSpritesLayer();
@@ -30,10 +31,15 @@ public class DoorButton extends ToolButton {
 
     @Override
     public void onMouseReleased(MouseEvent e) {
-        updateLine(SnapCalculator.calcSnap(e.getPoint()));
+        currentDoor.setEnd(SnapCalculator.calcSnap(e.getPoint()));
         if (!isDoorValid(currentDoor)) {
             spritesPanel.remove(currentDoor);
-        };
+        } else {
+            mergeDoorIfPossible(currentDoor);
+        }
+        System.out.println(spritesPanel.getSprites().size());
+
+        spritesPanel.getView().repaint();
     }
 
     private void updateLine(Point end) {
@@ -95,6 +101,61 @@ public class DoorButton extends ToolButton {
         isValid = isValid && n_intersects != 0;
 
         return isValid;
+    }
+
+    public static boolean mergeDoorIfPossible(Door door) {
+        ArrayList<Door> mergeDoors = new ArrayList<Door>();
+
+        for (Drawable sprite: spritesPanel.getSprites()) {
+            if (sprite.equals(door)) {
+                continue;
+            }
+
+            Door testDoor = (Door)sprite;
+            if (sprite instanceof Door && testDoor.intersects(door)) {
+                mergeDoors.add(testDoor);
+            }
+        }
+
+        if (mergeDoors.isEmpty()) {
+            return false;
+        }
+
+        Door mergedDoor;
+        if (door.isVertical()) {
+            int minY = door.getMinY();
+            int maxY = door.getMaxY();
+            int x = door.getStart().x;
+
+            for (Door doorToMerge: mergeDoors) {
+                minY = Math.min(doorToMerge.getMinY(), minY);
+                maxY = Math.max(doorToMerge.getMaxY(), maxY);
+            }
+
+            mergedDoor = new Door(x, minY, x, maxY);
+
+        } else {
+            int minX = door.getMinX();
+            int maxX = door.getMaxX();
+            int y = door.getStart().y;
+
+            for (Door doorToMerge: mergeDoors) {
+                minX = Math.min(doorToMerge.getMinX(), minX);
+                maxX = Math.max(doorToMerge.getMaxX(), maxX);
+            }
+
+            mergedDoor = new Door(minX, y, maxX, y);
+        }
+
+        if (!isDoorValid(mergedDoor)) {
+            return false;
+        }
+
+        mergeDoors.add(door);
+        spritesPanel.getSprites().removeAll(mergeDoors);
+        spritesPanel.add(mergedDoor);
+
+        return true;
     }
 
     @Override
