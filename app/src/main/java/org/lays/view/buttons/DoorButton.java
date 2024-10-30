@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import org.lays.snap.SnapCalculator;
 import org.lays.view.ToolButton;
 import org.lays.view.Door;
+import org.lays.view.Drawable;
 import org.lays.view.panels.RoomsLayer;
 import org.lays.view.panels.SpritesLayer;
 import org.lays.view.Canvas;
@@ -38,6 +39,25 @@ public class DoorButton extends ToolButton {
     private void updateLine(Point end) {
         currentDoor.setEnd(end);
         spritesPanel.getView().repaint();
+    }
+
+    public static boolean isValidRoomPlacement(Room room) {
+        for (Drawable sprite: spritesPanel.getSprites()) {
+            if (!(sprite instanceof Door)) {
+                continue;
+            }
+
+            Door door = (Door) sprite;
+            if (!door.intersects(room)) {
+                continue;
+            }
+
+            if (!isValidDoorOnRoom(door, room)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static boolean isValidDoorOnRoom(Door door, Room room) {

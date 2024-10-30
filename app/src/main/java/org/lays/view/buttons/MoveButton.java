@@ -39,19 +39,34 @@ public class MoveButton extends ToolButton {
 
     @Override
     public void onMouseReleased(MouseEvent e) {
-        for (Room shape : roomsLayer.getSelectedRooms()) {
-            if (roomsLayer.isIntersecting(shape)) {
+        for (Room room : roomsLayer.getSelectedRooms()) {
+            if (roomsLayer.isIntersecting(room)) {
                 JOptionPane.showMessageDialog(
                         null,
                         "Moving shapes back to their previous location...",
                         "Overlap Detected",
                         JOptionPane.ERROR_MESSAGE);
-                roomsLayer.getSelectedRooms().forEach(s -> s.setLocation(shapeStarts.get(s)));
+                abortMove();
+                break;
+            }
+
+            if (!DoorButton.isValidRoomPlacement(room)) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Moving shapes back to their previous location...",
+                        "Door Misalignment Detected",
+                        JOptionPane.ERROR_MESSAGE);
+                abortMove();
                 break;
             }
         }
         roomsLayer.getView().repaint();
         shapeStarts.clear();
+    }
+
+
+    public void abortMove() {
+        roomsLayer.getSelectedRooms().forEach(s -> s.setLocation(shapeStarts.get(s)));
     }
 
     public void moveShapes(Point p) {
