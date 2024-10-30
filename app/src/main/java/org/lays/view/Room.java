@@ -25,7 +25,7 @@ public class Room extends Drawable {
         Rectangle roomBounds = getBounds();
         return (
             point.x >= roomBounds.getMinX() && point.x <= roomBounds.getMaxX() && 
-            (point.y == roomBounds.getMinY() || point.y == roomBounds.getMaxY())
+            (Double.compare(point.y, roomBounds.getMinY()) == 0 || Double.compare(point.y, roomBounds.getMaxY()) == 0)
         );
     }
 
@@ -33,7 +33,7 @@ public class Room extends Drawable {
         Rectangle roomBounds = getBounds();
         return (
             point.y >= roomBounds.getMinY() && point.y <= roomBounds.getMaxY() && 
-            (point.x == roomBounds.getMinX() || point.x == roomBounds.getMaxX())
+            (Double.compare(point.x, roomBounds.getMinX()) == 0 || Double.compare(point.x, roomBounds.getMaxX()) == 0)
         );
     }
 
