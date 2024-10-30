@@ -11,6 +11,8 @@ import org.lays.view.panels.RoomsLayer;
 import org.lays.view.panels.SpritesLayer;
 import org.lays.view.Canvas;
 import org.lays.view.Room;
+import org.lays.view.RoomType;
+
 import java.util.ArrayList;
 
 public class DoorButton extends ToolButton {
@@ -87,8 +89,10 @@ public class DoorButton extends ToolButton {
 
         int n_intersects = 0;
         boolean isValid = true;
+        RoomType lastIntersectingRoomType = null;
         for (Room room : roomsPanel.getRooms()) {
             if (door.intersects(room)) {
+                lastIntersectingRoomType = room.getRoomType();
                 n_intersects += 1;
 
                 if (!isValidDoorOnRoom(door, room)) {
@@ -98,7 +102,12 @@ public class DoorButton extends ToolButton {
             }
         }
 
-        isValid = isValid && n_intersects != 0;
+        if (n_intersects == 1) {
+            isValid &= !lastIntersectingRoomType.equals(RoomType.BATHROOM) &&
+                       !lastIntersectingRoomType.equals(RoomType.BEDROOM);
+        } else {
+            isValid &= n_intersects != 0;
+        }
 
         return isValid;
     }
