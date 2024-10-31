@@ -6,7 +6,7 @@ import javax.swing.JComponent;
 
 
 public abstract class Drawable extends JComponent {
-    public abstract Shape getShape();
+    public abstract Shape getHitBox();
     protected boolean selected = false;
 
     public final void setSelected(boolean selected) {
@@ -20,6 +20,8 @@ public abstract class Drawable extends JComponent {
     public final boolean intersects(Drawable drawable){
         return getBounds().intersects(drawable.getBounds());
     }
+
+    public abstract Shape getVisibleShape();
 
     public abstract void paintShape(Graphics g2d);
 } 

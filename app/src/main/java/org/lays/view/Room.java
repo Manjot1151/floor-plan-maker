@@ -10,6 +10,7 @@ import java.awt.Shape;
 
 public class Room extends Drawable {
     private RoomType roomType;
+    private static int wallThickness = 3;
 
     private static final Color selectOverlay = new Color(0, 0, 255, 100);
     private static final float overlayOpacity = 0.6f;
@@ -24,7 +25,7 @@ public class Room extends Drawable {
         Rectangle roomBounds = getBounds();
         return (
             point.x >= roomBounds.getMinX() && point.x <= roomBounds.getMaxX() && 
-            (point.y == roomBounds.getMinY() || point.y == roomBounds.getMaxY())
+            (Double.compare(point.y, roomBounds.getMinY()) == 0 || Double.compare(point.y, roomBounds.getMaxY()) == 0)
         );
     }
 
@@ -32,12 +33,12 @@ public class Room extends Drawable {
         Rectangle roomBounds = getBounds();
         return (
             point.y >= roomBounds.getMinY() && point.y <= roomBounds.getMaxY() && 
-            (point.x == roomBounds.getMinX() || point.x == roomBounds.getMaxX())
+            (Double.compare(point.x, roomBounds.getMinX()) == 0 || Double.compare(point.x, roomBounds.getMaxX()) == 0)
         );
     }
 
     @Override 
-    public Shape getShape() {
+    public Shape getHitBox() {
         return getBounds();
     }
 
@@ -47,6 +48,10 @@ public class Room extends Drawable {
 
     public Color getColor() {
         return roomType.getColor();
+    }
+
+    public Shape getVisibleShape() {
+        return getHitBox();
     }
 
     public void paintShape(Graphics g) {
@@ -65,10 +70,10 @@ public class Room extends Drawable {
             );
             g2d.setColor(selectedColor);
         }
-        Shape shape = getShape();
+        Shape shape = getHitBox();
         g2d.fill(shape);
         g2d.setColor(Color.BLACK);
-        g2d.setStroke(new BasicStroke(3));
+        g2d.setStroke(new BasicStroke(wallThickness));
         g2d.draw(shape);
 
         g2d.dispose();

@@ -45,12 +45,16 @@ public class RoomButton extends ToolButton {
     public void onMouseReleased(MouseEvent e) {
         updateRoom(SnapCalculator.calcSnap(e.getPoint()));
 
-        boolean isRoomInvalid = currentRoom.getWidth() == 0 || currentRoom.getHeight() == 0 || roomsLayer.isIntersecting(currentRoom);
-        if (isRoomInvalid) {
+        if (!isRoomValid(currentRoom)) {
             roomsLayer.remove(currentRoom);
             roomsLayer.getView().repaint();
             currentRoom = null;
         }
+    }
+
+
+    public boolean isRoomValid(Room room) {
+        return room.getWidth() != 0 && room.getHeight() != 0 && !roomsLayer.isIntersecting(room);
     }
 
     @Override
