@@ -8,6 +8,16 @@ import java.awt.Graphics2D;
 import java.awt.AlphaComposite;
 
 public class Window extends RoomEdgeDrawable {
+    public static class Factory implements EdgeDrawableFactory<Window> {
+        public Window fromPoints(Point start, Point end) {
+            return new Window(start, end);
+        }
+
+        public Window fromCoordinates(int startX, int startY, int endX,int endY) {
+            return new Window(startX, startY, endX, endY);
+        }
+    }
+
     public static BasicStroke windowStroke = new BasicStroke(wallThickness, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] {9}, 0);
 
     public Window(Point start, Point end) {
