@@ -24,5 +24,7 @@ public abstract class Drawable extends JComponent {
 
     public abstract Shape getVisibleShape();
 
+    public abstract boolean isValidDrawable();
+
     public abstract void paintShape(Graphics g2d);
 } 
