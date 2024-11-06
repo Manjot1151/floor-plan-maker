@@ -35,7 +35,7 @@ public abstract class EdgeDrawableButton<T extends RoomEdgeDrawable, F extends E
     @Override
     public void onMouseReleased(MouseEvent e) {
         currentEdgeDrawable.setEnd(SnapCalculator.calcSnap(e.getPoint()));
-        if (!isValidDrawable(currentEdgeDrawable)) {
+        if (!currentEdgeDrawable.isValidDrawable()) {
             spritesPanel.remove(currentEdgeDrawable);
         } else {
             mergeWindowIfPossible(currentEdgeDrawable);
@@ -49,9 +49,6 @@ public abstract class EdgeDrawableButton<T extends RoomEdgeDrawable, F extends E
         currentEdgeDrawable.setEnd(end);
         spritesPanel.getView().repaint();
     }
-
-    
-    public abstract boolean isValidDrawable(T window);
 
     public boolean mergeWindowIfPossible(T edgeDrawable) {
         ArrayList<T> mergeEdgeDrawables = new ArrayList<T>();
@@ -96,7 +93,7 @@ public abstract class EdgeDrawableButton<T extends RoomEdgeDrawable, F extends E
             mergedEdgeDrawable = factory.fromCoordinates(minX, y, maxX, y);
         }
 
-        if (!isValidDrawable(mergedEdgeDrawable)) {
+        if (!isValidDrawable(currentEdgeDrawable)) {
             return false;
         }
 
@@ -106,6 +103,9 @@ public abstract class EdgeDrawableButton<T extends RoomEdgeDrawable, F extends E
 
         return true;
     }
+
+    abstract boolean isValidDrawable(T edgeDrawable);
+
 
     @Override
     public void onMouseDragged(MouseEvent e) {

@@ -5,8 +5,12 @@ import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import org.lays.view.panels.RoomsLayer;
+import org.lays.view.panels.SpritesLayer;
 
 public class Door extends RoomEdgeDrawable {
+    public static RoomsLayer roomsLayer = Canvas.getInstance().getRoomsLayer();
+    public static SpritesLayer spritesLayer = Canvas.getInstance().getSpritesLayer();
     private static BasicStroke wallStroke = new BasicStroke(wallThickness);
 
     public static class Factory implements EdgeDrawableFactory<Door> {
@@ -35,5 +39,29 @@ public class Door extends RoomEdgeDrawable {
 
         g2d.draw(getVisibleShape());
         g2d.dispose();
+    }
+
+    @Override
+    public boolean hasValidPlacement() {
+        int n_intersects = 0;
+        RoomType lastIntersectingRoomType = null;
+        for (Room room : roomsLayer.getRooms()) {
+            if (this.intersects(room)) {
+                lastIntersectingRoomType = room.getRoomType();
+                n_intersects += 1;
+
+                if (!this.isValidOnRoom(room)) {
+                    return false;
+                }
+            }
+        }
+
+        if (n_intersects == 0) {
+            return false;
+        } else if (n_intersects == 1 && (lastIntersectingRoomType.equals(RoomType.BATHROOM) || lastIntersectingRoomType.equals(RoomType.BEDROOM))) {
+            return false;
+        }
+
+        return true;
     }
 }

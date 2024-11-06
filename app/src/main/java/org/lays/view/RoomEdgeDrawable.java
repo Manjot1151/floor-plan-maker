@@ -4,10 +4,12 @@ import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.awt.Shape;
 import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
 import java.awt.Graphics;
 
-public abstract class RoomEdgeDrawable extends Drawable {
+import org.lays.view.panels.SpritesLayer;
+
+public abstract class RoomEdgeDrawable extends Sprite {
+    SpritesLayer spritesLayer = Canvas.getInstance().getSpritesLayer();
     protected Point start;
     protected Point end;
     protected static int wallThickness  = 3;
@@ -68,9 +70,6 @@ public abstract class RoomEdgeDrawable extends Drawable {
         }
     }
 
-    public boolean intersects(Room room)   {
-        return getHitBox().intersects((Rectangle2D)room.getHitBox());
-    }
 
     @Override
     public boolean intersects(Drawable drawable)   {
@@ -110,6 +109,19 @@ public abstract class RoomEdgeDrawable extends Drawable {
         } else {
             return new Line2D.Float(getMinX() + wallThickness, start.y, getMaxX() - wallThickness, start.y);
         }
+    }
+
+    public boolean hasValidDimensinons() {
+        return !this.isPoint();
+    }
+
+    @Override
+    public boolean validatePossibleSpriteInterersection(Sprite sprite) {
+        return !this.intersects(sprite) || this.getClass() == sprite.getClass();
+    }
+
+    public boolean isValidDrawable() {
+        return hasValidDimensinons() && hasValidPlacement() && spritesLayer.validateSpriteInteresctions(this);
     }
 
     @Override
