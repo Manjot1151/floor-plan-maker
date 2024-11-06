@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import org.lays.view.Drawable;
 import org.lays.view.Room;
 
 public class RoomsLayer {
@@ -36,9 +35,20 @@ public class RoomsLayer {
         view.repaint();
     }
 
+    public boolean checkForOverlap() {
+        int n = rooms.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (rooms.get(i).intersects(rooms.get(j))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
-    public boolean isIntersecting(Drawable targetRoom) {
-        for (Drawable room : rooms) {
+    public boolean isIntersecting(Room targetRoom) {
+        for (Room room : rooms) {
             if (room == targetRoom) {
                 continue;
             }

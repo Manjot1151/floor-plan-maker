@@ -8,12 +8,13 @@ import javax.swing.JOptionPane;
 import org.lays.snap.SnapCalculator;
 import org.lays.view.Canvas;
 import org.lays.view.Drawable;
-import org.lays.view.Room;
 import org.lays.view.ToolButton;
 import org.lays.view.panels.RoomsLayer;
+import org.lays.view.panels.SpritesLayer;
 
 public class MoveButton extends ToolButton {
     private final RoomsLayer roomsLayer = Canvas.getInstance().getRoomsLayer();
+    private final SpritesLayer spritesLayer = Canvas.getInstance().getSpritesLayer();
     private Point start;
     private HashMap<Drawable, Point> shapeStarts = new HashMap<>();
 
@@ -37,30 +38,21 @@ public class MoveButton extends ToolButton {
         moveShapes(e.getPoint());
     }
 
+    public boolean validateMove(){
+        return roomsLayer.checkForOverlap() && spritesLayer.checkForOverlap() && spritesLayer.validateSpritePlacement();
+
+    }
+
+
     @Override
     public void onMouseReleased(MouseEvent e) {
-        for (Room room : roomsLayer.getSelectedRooms()) {
-            if (roomsLayer.isIntersecting(room)) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Moving shapes back to their previous location...",
-                        "Overlap Detected",
-                        JOptionPane.ERROR_MESSAGE);
-                abortMove();
-                break;
-            }
-
-            if (!DoorButton.isValidRoomPlacement(room)) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Moving shapes back to their previous location...",
-                        "Door Misalignment Detected",
-                        JOptionPane.ERROR_MESSAGE);
-                abortMove();
-                break;
-            }
+        if (!validateMove()) {
+            JOptionPane.showMessageDialog(null, "Moving Shapes back to their previous location", "Misalignment Detected", JOptionPane.ERROR_MESSAGE);
+            abortMove();
         }
-        roomsLayer.getView().repaint();
+
+        // roomsLayer.getView().repaint();
+        spritesLayer.getView().repaint();
         shapeStarts.clear();
     }
 
