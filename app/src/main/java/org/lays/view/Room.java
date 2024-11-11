@@ -8,7 +8,13 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
+import org.lays.view.panels.RoomsLayer;
+import org.lays.view.panels.SpritesLayer;
+
 public class Room extends Drawable {
+    public static SpritesLayer spritesLayer = Canvas.getInstance().getSpritesLayer();
+    public static RoomsLayer roomsLayer = Canvas.getInstance().getRoomsLayer();
+
     private RoomType roomType;
     private static int wallThickness = 3;
 
@@ -61,7 +67,7 @@ public class Room extends Drawable {
         if (this instanceof Room) {
             g2d.setColor(((Room) this).getColor());
         }
-        if (selected) {
+        if (isSelected()) {
             Color selectedColor = new Color(
                     (int) (selectOverlay.getRed() * (overlayOpacity) + g2d.getColor().getRed() * (1-overlayOpacity)),
                     (int) (selectOverlay.getGreen() * (overlayOpacity) + g2d.getColor().getGreen() * (1-overlayOpacity)),
@@ -77,6 +83,24 @@ public class Room extends Drawable {
         g2d.draw(shape);
 
         g2d.dispose();
+    }
+
+    public boolean hasValidDimensinons() {
+        return this.getWidth() != 0 && this.getHeight() != 0;
+    }
+
+    public boolean validateSprites() {
+        for (Sprite sprite: spritesLayer.getSprites()) {
+            if(sprite.intersects(this) && (!sprite.isValidOnRoom(this) || (sprite instanceof Window)))  {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean isValidDrawable() {
+        return this.hasValidDimensinons() && !roomsLayer.isIntersecting(this) && this.validateSprites();
     }
 
 }

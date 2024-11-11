@@ -2,119 +2,72 @@ package org.lays.view;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.geom.Line2D;
-import java.awt.Shape;
-import java.awt.geom.Rectangle2D;
-import java.awt.Rectangle;
+import org.lays.view.panels.RoomsLayer;
+import org.lays.view.panels.SpritesLayer;
 
-public class Door extends Drawable {
-    private Point start;
-    private Point end;
-    private static int wallThickness = 3;
+public class Door extends RoomEdgeDrawable {
+    public static RoomsLayer roomsLayer = Canvas.getInstance().getRoomsLayer();
+    public static SpritesLayer spritesLayer = Canvas.getInstance().getSpritesLayer();
     private static BasicStroke wallStroke = new BasicStroke(wallThickness);
-    private static final int padding = 10;
 
-    public boolean isVertical() {
-        return start.x == end.x;
-    }
+    public static class Factory implements EdgeDrawableFactory<Door> {
+        public Door fromPoints(Point start, Point end) {
+            return new Door(start, end);
+        }
 
-    public boolean isHorizontal() {
-        return start.y == end.y;
-    }
-
-    public Point getStart() {
-        return start;
-    }
-    public Point getEnd() {
-        return end;
+        public Door fromCoordinates(int startX, int startY, int endX,int endY) {
+            return new Door(startX, startY, endX, endY);
+        }
     }
 
-    public boolean isPoint() {
-        return isVertical() && isHorizontal();
-    }
-
-    public int getMinX() {
-        return Math.min(start.x, end.x);
-    }
-
-    public int getMaxX() {
-        return Math.max(start.x, end.x);
-    }
-
-    public int getMinY() {
-        return Math.min(start.y, end.y);
-    }
-
-    public int getMaxY() {
-        return Math.max(start.y, end.y);
-    }
-    
     public Door(Point start, Point end) {
-        this.start = start;
-        setEnd(end);
+        super(start, end);
     }
 
     public Door(int startX, int startY, int endX, int endY) {
-        this.start = new Point(startX, startY);
-        setEnd(new Point(endX, endY));
-    }
-
-    private Point calcOrthoEnd(Point start, Point end) {
-        int dispY = end.x - start.x;
-        int dispX = end.y - start.y;
-        if (Math.abs(dispX) <= Math.abs(dispY)) {
-            return new Point(end.x, start.y);
-        } else {
-            return new Point(start.x, end.y);
-        }
-    }
-
-    public boolean intersects(Room room)   {
-        return getHitBox().intersects((Rectangle2D)room.getHitBox());
-    }
-
-    public boolean intersects(Door door)   {
-        boolean areInSameOrientation = (this.isHorizontal() && door.isHorizontal()) || (this.isVertical() && door.isVertical());
-        return areInSameOrientation && this.getLine().intersectsLine(door.getLine());
-    }
-
-
-    public void setEnd(Point end) {
-        this.end = calcOrthoEnd(start, end);
-    }
-
-    public Line2D getLine() {
-        return new Line2D.Float(start, end);
-    }
-
-    @Override
-    public Shape getHitBox() {
-        if (isVertical()) {
-            return new Rectangle(start.x - padding, getMinY() + wallThickness, 2 * padding, Math.abs(start.y - end.y) - (2*wallThickness));
-        } else {
-            return new Rectangle(getMinX() + wallThickness, start.y - padding, Math.abs(start.x - end.x) - (2*wallThickness), 2*padding);
-        }
-    }
-
-    @Override
-    public Shape getVisibleShape() {
-        if (isVertical()) {
-            return new Line2D.Float(start.x, getMinY() + wallThickness, start.x, getMaxY() - wallThickness);
-        } else {
-            return new Line2D.Float(getMinX() + wallThickness, start.y, getMaxX() - wallThickness, start.y);
-        }
+        super(startX, startY, endX, endY);
     }
 
     @Override
     public void paintShape(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setStroke(wallStroke);
-        g2d.setComposite(AlphaComposite.Clear);
+
+        if (isSelected()) {
+            g2d.setColor(Color.RED);
+        } else {
+            g2d.setComposite(AlphaComposite.Clear);
+        }
 
         g2d.draw(getVisibleShape());
         g2d.dispose();
+    }
+
+    @Override
+    public boolean hasValidPlacement() {
+        int n_intersects = 0;
+        RoomType lastIntersectingRoomType = null;
+        for (Room room : roomsLayer.getRooms()) {
+            if (this.intersects(room)) {
+                lastIntersectingRoomType = room.getRoomType();
+                n_intersects += 1;
+
+                if (!this.isValidOnRoom(room)) {
+                    return false;
+                }
+            }
+        }
+
+        if (n_intersects == 0) {
+            return false;
+        } else if (n_intersects == 1 && (lastIntersectingRoomType.equals(RoomType.BATHROOM) || lastIntersectingRoomType.equals(RoomType.BEDROOM))) {
+            return false;
+        }
+
+        return true;
     }
 }

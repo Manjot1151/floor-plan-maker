@@ -3,25 +3,28 @@ package org.lays.view;
 import java.awt.Graphics;
 import java.awt.Shape;
 import javax.swing.JComponent;
+import java.awt.geom.Rectangle2D;
 
 
 public abstract class Drawable extends JComponent {
     public abstract Shape getHitBox();
     protected boolean selected = false;
 
-    public final void setSelected(boolean selected) {
+    public void setSelected(boolean selected) {
         this.selected = selected;
     }
 
-    public final boolean isSelected() {
+    public boolean isSelected() {
         return selected;
     }
 
-    public final boolean intersects(Drawable drawable){
-        return getBounds().intersects(drawable.getBounds());
+    public boolean intersects(Drawable drawable){
+        return getHitBox().intersects((Rectangle2D)drawable.getHitBox());
     }
 
     public abstract Shape getVisibleShape();
+
+    public abstract boolean isValidDrawable();
 
     public abstract void paintShape(Graphics g2d);
 } 

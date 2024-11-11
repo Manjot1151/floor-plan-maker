@@ -1,19 +1,21 @@
 package org.lays.view.panels;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
 import org.lays.view.Drawable;
+import org.lays.view.Sprite;
 
 public class SpritesLayer {
-    private ArrayList<Drawable> sprites;
+    private ArrayList<Sprite> sprites;
     private JPanel view;
     
     public SpritesLayer(JPanel view) {
         super();
-        sprites = new ArrayList<Drawable>();
+        sprites = new ArrayList<Sprite>();
         this.view = view;
     }
 
@@ -21,7 +23,7 @@ public class SpritesLayer {
         return view;
     }
 
-    public void add(Drawable sprite) {
+    public void add(Sprite sprite) {
         sprites.add(sprite);
         sprite.setVisible(false);
 
@@ -35,42 +37,52 @@ public class SpritesLayer {
         view.repaint();
     }
 
-    // public boolean isIntersecting(Drawable shape) {
-    //     for (Drawable s : sprites) {
-    //         if (s == shape) {
-    //             continue;
-    //         }
+    public boolean validateSpriteInteresctions(Sprite sprite) {
+        for (Sprite sprite2 : sprites) {
+            if (sprite2.equals(sprite)) {
+                continue;
+            }
 
-    //         if (s.intersects(shape)) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
+            if (!sprite.validatePossibleSpriteInterersection(sprite2)) {
+                return false;
+            }
+        }
 
-    // public Drawable getClickedShape(Point p) {
-    //     for (Drawable s : sprites) {
-    //         if (s.getBounds().contains(p)) {
-    //             return s;
-    //         }
-    //     }
-    //     return null;
-    // }
+        return true;
+    }
 
-    public ArrayList<Drawable> getSprites() {
+
+    public Sprite getClickedSprite(Point point) {
+        for (Sprite sprite: getSprites()) {
+            if (sprite.getHitBox().contains(point)) {
+                return sprite;
+            }
+        }
+        return null;
+    }
+
+    public boolean checkForOverlap() {
+        for (Sprite sprite: sprites) {
+            if(!validateSpriteInteresctions(sprite)) return false;
+        }
+
+        return true;
+    }
+
+    public boolean validateSpritePlacement() {
+        for (Sprite sprite : sprites) {
+            if (!sprite.hasValidPlacement()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public ArrayList<Sprite> getSprites() {
         return sprites;
     }
     
-    // public List<Drawable> getSelectedShapes() {
-    //     List<Drawable> selectedShapes = new ArrayList<Drawable>();
-    //     for (Drawable s : sprites) {
-    //         if (s.isSelected()) {
-    //             selectedShapes.add(s);
-    //         }
-    //     }
-    //     return selectedShapes;
-    // }
-
     public void paintLayer(Graphics g) {
         for (Drawable s: sprites) {
             s.paintShape(g);

@@ -8,14 +8,18 @@ import javax.swing.JOptionPane;
 import org.lays.snap.SnapCalculator;
 import org.lays.view.Canvas;
 import org.lays.view.Drawable;
-import org.lays.view.Room;
+import org.lays.view.Sprite;
 import org.lays.view.ToolButton;
+import org.lays.view.panels.GraphicsPanel;
 import org.lays.view.panels.RoomsLayer;
+import org.lays.view.panels.SpritesLayer;
 
 public class MoveButton extends ToolButton {
-    private final RoomsLayer roomsLayer = Canvas.getInstance().getRoomsLayer();
+    private GraphicsPanel graphicsPanel = Canvas.getInstance().getGraphicsPanel();
+    private RoomsLayer roomsLayer = graphicsPanel.getRoomsLayer();
+    private SpritesLayer spritesLayer = graphicsPanel.getSpritesLayer();
     private Point start;
-    private HashMap<Drawable, Point> shapeStarts = new HashMap<>();
+    private HashMap<Drawable, Point> moveItemStarts = new HashMap<>();
 
     public MoveButton() {
         super("Move");
@@ -29,7 +33,14 @@ public class MoveButton extends ToolButton {
     @Override
     public void onMousePressed(MouseEvent e) {
         start = SnapCalculator.calcSnap(e.getPoint());
-        roomsLayer.getSelectedRooms().forEach(shape -> shapeStarts.put(shape, new Point(shape.getX(), shape.getY())));
+
+        graphicsPanel.getSelectedItems().forEach(drawable -> moveItemStarts.put(drawable, drawable.getLocation()));
+
+        for (Sprite sprite: spritesLayer.getSprites()) {
+            if (sprite.shouldSoftSelect()) {
+                moveItemStarts.put(sprite, sprite.getLocation());
+            }
+        }
     }
 
     @Override
@@ -37,36 +48,28 @@ public class MoveButton extends ToolButton {
         moveShapes(e.getPoint());
     }
 
-    @Override
-    public void onMouseReleased(MouseEvent e) {
-        for (Room room : roomsLayer.getSelectedRooms()) {
-            if (roomsLayer.isIntersecting(room)) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Moving shapes back to their previous location...",
-                        "Overlap Detected",
-                        JOptionPane.ERROR_MESSAGE);
-                abortMove();
-                break;
-            }
-
-            if (!DoorButton.isValidRoomPlacement(room)) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Moving shapes back to their previous location...",
-                        "Door Misalignment Detected",
-                        JOptionPane.ERROR_MESSAGE);
-                abortMove();
-                break;
-            }
-        }
-        roomsLayer.getView().repaint();
-        shapeStarts.clear();
+    public boolean validateMove(){
+        return roomsLayer.checkForOverlap() && spritesLayer.checkForOverlap() && spritesLayer.validateSpritePlacement();
     }
 
 
+    @Override
+    public void onMouseReleased(MouseEvent e) {
+        if (!validateMove()) {
+            JOptionPane.showMessageDialog(null, "Moving Shapes back to their previous location", "Misalignment Detected", JOptionPane.ERROR_MESSAGE);
+            abortMove();
+        }
+
+        // roomsLayer.getView().repaint();
+        graphicsPanel.repaint();
+        moveItemStarts.clear();
+    }
+
     public void abortMove() {
-        roomsLayer.getSelectedRooms().forEach(s -> s.setLocation(shapeStarts.get(s)));
+        moveItemStarts.entrySet().forEach(entry -> entry.getKey().setLocation(entry.getValue()));
+    }
+
+    public void setSoftSelects() {
     }
 
     public void moveShapes(Point p) {
@@ -74,10 +77,13 @@ public class MoveButton extends ToolButton {
         int dx = end.x - start.x;
         int dy = end.y - start.y;
 
-        roomsLayer.getSelectedRooms()
-                .forEach(shape -> shape.setLocation((int) shapeStarts.get(shape).getX() + dx,
-                        (int) shapeStarts.get(shape).getY() + dy));
 
-        roomsLayer.getView().repaint();
+        moveItemStarts.entrySet().forEach(entry -> {
+            Point translatedPoint = (Point)entry.getValue().clone();
+            translatedPoint.translate(dx, dy);
+            entry.getKey().setLocation(translatedPoint);
+        });
+
+        graphicsPanel.repaint();
     }
 }
