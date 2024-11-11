@@ -73,9 +73,9 @@ public abstract class EdgeDrawableButton<T extends RoomEdgeDrawable, F extends E
             int maxY = edgeDrawable.getMaxY();
             int x = edgeDrawable.getStart().x;
 
-            for (T windowToMerge: mergeEdgeDrawables) {
-                minY = Math.min(windowToMerge.getMinY(), minY);
-                maxY = Math.max(windowToMerge.getMaxY(), maxY);
+            for (T edgeDrawableToMerge: mergeEdgeDrawables) {
+                minY = Math.min(edgeDrawableToMerge.getMinY(), minY);
+                maxY = Math.max(edgeDrawableToMerge.getMaxY(), maxY);
             }
 
             mergedEdgeDrawable = factory.fromCoordinates(x, minY, x, maxY);
@@ -100,7 +100,7 @@ public abstract class EdgeDrawableButton<T extends RoomEdgeDrawable, F extends E
         if (!mergedEdgeDrawable.isValidDrawable()) {
             return false;
         }
-        
+
         mergeEdgeDrawables.add(edgeDrawable);
         spritesPanel.getSprites().removeAll(mergeEdgeDrawables);
         spritesPanel.add(mergedEdgeDrawable);

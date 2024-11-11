@@ -137,7 +137,7 @@ public abstract class RoomEdgeDrawable extends Sprite {
     }
 
     public boolean isValidDrawable() {
-        return hasValidDimensions() && hasValidPlacement() && spritesLayer.validateSpriteInteresctions(this);
+        return hasValidDimensions() && hasValidPlacement() && spritesLayer.validateSpriteIntersections(this);
     }
 
     @Override

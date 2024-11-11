@@ -37,7 +37,7 @@ public class SpritesLayer {
         view.repaint();
     }
 
-    public boolean validateSpriteInteresctions(Sprite sprite) {
+    public boolean validateSpriteIntersections(Sprite sprite) {
         for (Sprite sprite2 : sprites) {
             if (sprite2.equals(sprite)) {
                 continue;
@@ -63,7 +63,7 @@ public class SpritesLayer {
 
     public boolean checkForOverlap() {
         for (Sprite sprite: sprites) {
-            if(!validateSpriteInteresctions(sprite)) return false;
+            if(!validateSpriteIntersections(sprite)) return false;
         }
 
         return true;
