@@ -1,6 +1,7 @@
 package org.lays.view.panels;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -43,14 +44,21 @@ public class SpritesLayer {
             }
 
             if (!sprite.validatePossibleSpriteInterersection(sprite2)) {
-                System.out.print(sprite);
-                System.out.print(" ");
-                System.out.println(sprite2);
                 return false;
             }
         }
 
         return true;
+    }
+
+
+    public Sprite getClickedSprite(Point point) {
+        for (Sprite sprite: getSprites()) {
+            if (sprite.getHitBox().contains(point)) {
+                return sprite;
+            }
+        }
+        return null;
     }
 
     public boolean checkForOverlap() {

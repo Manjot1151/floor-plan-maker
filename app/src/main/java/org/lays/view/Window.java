@@ -1,8 +1,9 @@
 package org.lays.view;
 
 import java.awt.Point;
+import java.awt.geom.Line2D;
 import java.awt.BasicStroke;
-
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.AlphaComposite;
@@ -18,7 +19,8 @@ public class Window extends RoomEdgeDrawable {
         }
     }
 
-    public static BasicStroke windowStroke = new BasicStroke(wallThickness, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] {9}, 0);
+    public static BasicStroke eraseStroke = new BasicStroke(wallThickness, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] {9}, 0);
+    public static BasicStroke fillStroke = new BasicStroke(wallThickness, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] {9}, 9f);
 
     public Window(Point start, Point end) {
         super(start, end);
@@ -31,9 +33,17 @@ public class Window extends RoomEdgeDrawable {
     @Override
     public void paintShape(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
+        Line2D line = getLine();
+
+        if (isSelected()) {
+            g2d.setPaint(Color.RED);
+            g2d.setStroke(fillStroke);
+            g2d.draw(line);
+        }
+
         g2d.setComposite(AlphaComposite.Clear);
-        g2d.setStroke(windowStroke);
-        g2d.draw(getLine());
+        g2d.setStroke(eraseStroke);
+        g2d.draw(line);
         g2d.dispose();
     }
 }

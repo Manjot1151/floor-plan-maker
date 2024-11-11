@@ -1,16 +1,20 @@
 package org.lays.view.buttons;
 
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 
-import org.lays.snap.SnapCalculator;
+import javax.swing.JPanel;
+
 import org.lays.view.Canvas;
-import org.lays.view.Room;
+import org.lays.view.Drawable;
 import org.lays.view.ToolButton;
-import org.lays.view.panels.GraphicsPanel;
 import org.lays.view.panels.RoomsLayer;
+import org.lays.view.panels.SpritesLayer;
 
 public class SelectButton extends ToolButton {
-    private final GraphicsPanel graphicsPanel = Canvas.getInstance().getGraphicsPanel();
+    private final SpritesLayer spritesLayer = Canvas.getInstance().getSpritesLayer();
+    private final RoomsLayer roomsLayer  = Canvas.getInstance().getRoomsLayer();
+    private final JPanel view = roomsLayer.getView();
     
     public SelectButton() {
         super("Select");
@@ -18,16 +22,22 @@ public class SelectButton extends ToolButton {
 
     @Override
     public void onMouseClicked(MouseEvent e) {
-        RoomsLayer roomsLayer = graphicsPanel.getRoomsLayer();
-        Room clickedRoom = roomsLayer.getClickedRoom(SnapCalculator.calcSnap(e.getPoint()));
-        if (clickedRoom == null) {
-            roomsLayer.getRooms().forEach(shape -> shape.setSelected(false));
-            graphicsPanel.repaint();
+        Point point = e.getPoint();
+        Drawable clickedDrawable = spritesLayer.getClickedSprite(point);
+
+        if (clickedDrawable == null) {
+            clickedDrawable = roomsLayer.getClickedRoom(point);
+        }
+
+        if (clickedDrawable == null) {
+            roomsLayer.getRooms().forEach(room -> room.setSelected(false));
+            spritesLayer.getSprites().forEach(sprite -> sprite.setSelected(false));
+            view.repaint();
             return;
         }
 
-        clickedRoom.setSelected(!clickedRoom.isSelected());
-        graphicsPanel.repaint();
+        clickedDrawable.setSelected(!clickedDrawable.isSelected());
+        view.repaint();
     }
 
     @Override
@@ -37,12 +47,12 @@ public class SelectButton extends ToolButton {
 
     @Override
     public void onMouseDragged(MouseEvent e) {
-        RoomsLayer rooms = graphicsPanel.getRoomsLayer();
-        rooms.getRooms().forEach(shape -> shape.setSelected(false));
+        // RoomsLayer rooms = graphicsPanel.getRoomsLayer();
+        // rooms.getRooms().forEach(shape -> shape.setSelected(false));
         
-        // TODO: Implement selection box
+        // // TODO: Implement selection box
         
-        graphicsPanel.repaint();
+        // graphicsPanel.repaint();
     }
 
     @Override

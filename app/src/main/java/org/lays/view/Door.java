@@ -2,6 +2,7 @@ package org.lays.view;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -35,7 +36,12 @@ public class Door extends RoomEdgeDrawable {
     public void paintShape(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setStroke(wallStroke);
-        g2d.setComposite(AlphaComposite.Clear);
+
+        if (isSelected()) {
+            g2d.setColor(Color.RED);
+        } else {
+            g2d.setComposite(AlphaComposite.Clear);
+        }
 
         g2d.draw(getVisibleShape());
         g2d.dispose();

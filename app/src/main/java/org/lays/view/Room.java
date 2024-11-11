@@ -67,7 +67,7 @@ public class Room extends Drawable {
         if (this instanceof Room) {
             g2d.setColor(((Room) this).getColor());
         }
-        if (selected) {
+        if (isSelected()) {
             Color selectedColor = new Color(
                     (int) (selectOverlay.getRed() * (overlayOpacity) + g2d.getColor().getRed() * (1-overlayOpacity)),
                     (int) (selectOverlay.getGreen() * (overlayOpacity) + g2d.getColor().getGreen() * (1-overlayOpacity)),
