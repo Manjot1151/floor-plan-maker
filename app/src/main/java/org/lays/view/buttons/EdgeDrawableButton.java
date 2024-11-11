@@ -97,6 +97,10 @@ public abstract class EdgeDrawableButton<T extends RoomEdgeDrawable, F extends E
             return false;
         }
 
+        if (!mergedEdgeDrawable.isValidDrawable()) {
+            return false;
+        }
+        
         mergeEdgeDrawables.add(edgeDrawable);
         spritesPanel.getSprites().removeAll(mergeEdgeDrawables);
         spritesPanel.add(mergedEdgeDrawable);
