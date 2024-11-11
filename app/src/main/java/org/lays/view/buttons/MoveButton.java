@@ -8,15 +8,18 @@ import javax.swing.JOptionPane;
 import org.lays.snap.SnapCalculator;
 import org.lays.view.Canvas;
 import org.lays.view.Drawable;
+import org.lays.view.Sprite;
 import org.lays.view.ToolButton;
+import org.lays.view.panels.GraphicsPanel;
 import org.lays.view.panels.RoomsLayer;
 import org.lays.view.panels.SpritesLayer;
 
 public class MoveButton extends ToolButton {
-    private final RoomsLayer roomsLayer = Canvas.getInstance().getRoomsLayer();
-    private final SpritesLayer spritesLayer = Canvas.getInstance().getSpritesLayer();
+    private GraphicsPanel graphicsPanel = Canvas.getInstance().getGraphicsPanel();
+    private RoomsLayer roomsLayer = graphicsPanel.getRoomsLayer();
+    private SpritesLayer spritesLayer = graphicsPanel.getSpritesLayer();
     private Point start;
-    private HashMap<Drawable, Point> shapeStarts = new HashMap<>();
+    private HashMap<Drawable, Point> moveItemStarts = new HashMap<>();
 
     public MoveButton() {
         super("Move");
@@ -30,7 +33,14 @@ public class MoveButton extends ToolButton {
     @Override
     public void onMousePressed(MouseEvent e) {
         start = SnapCalculator.calcSnap(e.getPoint());
-        roomsLayer.getSelectedRooms().forEach(shape -> shapeStarts.put(shape, new Point(shape.getX(), shape.getY())));
+
+        graphicsPanel.getSelectedItems().forEach(drawable -> moveItemStarts.put(drawable, drawable.getLocation()));
+
+        for (Sprite sprite: spritesLayer.getSprites()) {
+            if (sprite.shouldSoftSelect()) {
+                moveItemStarts.put(sprite, sprite.getLocation());
+            }
+        }
     }
 
     @Override
@@ -40,7 +50,6 @@ public class MoveButton extends ToolButton {
 
     public boolean validateMove(){
         return roomsLayer.checkForOverlap() && spritesLayer.checkForOverlap() && spritesLayer.validateSpritePlacement();
-
     }
 
 
@@ -52,13 +61,15 @@ public class MoveButton extends ToolButton {
         }
 
         // roomsLayer.getView().repaint();
-        spritesLayer.getView().repaint();
-        shapeStarts.clear();
+        graphicsPanel.repaint();
+        moveItemStarts.clear();
     }
 
-
     public void abortMove() {
-        roomsLayer.getSelectedRooms().forEach(s -> s.setLocation(shapeStarts.get(s)));
+        moveItemStarts.entrySet().forEach(entry -> entry.getKey().setLocation(entry.getValue()));
+    }
+
+    public void setSoftSelects() {
     }
 
     public void moveShapes(Point p) {
@@ -66,10 +77,13 @@ public class MoveButton extends ToolButton {
         int dx = end.x - start.x;
         int dy = end.y - start.y;
 
-        roomsLayer.getSelectedRooms()
-                .forEach(shape -> shape.setLocation((int) shapeStarts.get(shape).getX() + dx,
-                        (int) shapeStarts.get(shape).getY() + dy));
 
-        roomsLayer.getView().repaint();
+        moveItemStarts.entrySet().forEach(entry -> {
+            Point translatedPoint = (Point)entry.getValue().clone();
+            translatedPoint.translate(dx, dy);
+            entry.getKey().setLocation(translatedPoint);
+        });
+
+        graphicsPanel.repaint();
     }
 }

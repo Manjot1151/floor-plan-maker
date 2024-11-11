@@ -13,6 +13,15 @@ public abstract class Sprite extends Drawable {
         return !this.intersects(sprite);
     }
 
+    public boolean shouldSoftSelect() {
+        for (Room room : roomsLayer.getRooms()) {
+            if (this.intersects(room) && !room.isSelected()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     // only checks wrt to rooms which the sprite interesects.
     public boolean hasValidPlacement() {
         int n_intersects = 0;

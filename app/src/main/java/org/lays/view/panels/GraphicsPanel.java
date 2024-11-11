@@ -5,6 +5,10 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import java.util.ArrayList;
+import org.lays.view.Drawable;
+import org.lays.view.Sprite;
+import org.lays.view.Room;
 import javax.swing.JPanel;
 
 public class GraphicsPanel extends JPanel {
@@ -22,6 +26,22 @@ public class GraphicsPanel extends JPanel {
 
     public SpritesLayer getSpritesLayer() {
         return this.sprites;
+    }
+
+    public ArrayList<Drawable> getSelectedItems() {
+        ArrayList<Drawable> selectedItems = new ArrayList<Drawable>();
+        for (Sprite sprite: sprites.getSprites()) {
+            if (sprite.isSelected()) {
+                selectedItems.add(sprite);
+            }
+        }
+        for (Room sprite: rooms.getRooms()) {
+            if (sprite.isSelected()) {
+                selectedItems.add(sprite);
+            }
+        }
+
+        return selectedItems;
     }
 
     @Override

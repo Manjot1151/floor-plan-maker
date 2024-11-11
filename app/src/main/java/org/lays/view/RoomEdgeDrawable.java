@@ -25,6 +25,22 @@ public abstract class RoomEdgeDrawable extends Sprite {
         setEnd(new Point(endX, endY));
     }
 
+    @Override
+    public Point getLocation() {
+        return start;
+    }
+
+    @Override
+    public void setLocation(Point point) {
+        int dx = point.x - start.x;
+        int dy = point.y - start.y;
+
+        this.start = point;
+
+        this.end.x += dx;
+        this.end.y += dy;
+    }
+
     public boolean isVertical() {
         return start.x == end.x;
     }
