@@ -3,19 +3,29 @@ package org.lays.view.buttons;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-
-import org.lays.view.Canvas;
-import org.lays.view.Config;
-import org.lays.view.Room;
-import org.lays.view.RoomType;
-import org.lays.view.ToolButton;
-import org.lays.view.panels.RoomsLayer;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 
+import org.lays.view.Canvas;
+import org.lays.view.Config;
+import org.lays.view.Drawable;
+import org.lays.view.Room;
+import org.lays.view.RoomType;
+import org.lays.view.Sprite;
+import org.lays.view.ToolButton;
+import org.lays.view.panels.GraphicsPanel;
+import org.lays.view.panels.RoomsLayer;
+import org.lays.view.panels.SpritesLayer;
+
 public class AlignButton extends ToolButton {
-    private final RoomsLayer roomsLayer = Canvas.getInstance().getRoomsLayer();
+    private final GraphicsPanel graphicsPanel = Canvas.getInstance().getGraphicsPanel();
+    private final RoomsLayer roomsLayer = graphicsPanel.getRoomsLayer();
+    private final SpritesLayer spritesLayer = graphicsPanel.getSpritesLayer();
+    
+    private HashMap<Drawable, Point> moveItemStarts = new HashMap<>();
 
     private Alignment currAlignment;
     private Point prevLocation;
@@ -91,16 +101,13 @@ public class AlignButton extends ToolButton {
 
         try {
             alignRooms(clickedRoom, currAlignment);
+            cancelAlignment(null);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Overlapping detected, moving room back to previous location.",
-                    "Alignment Error",
-                    JOptionPane.ERROR_MESSAGE);
+            cancelAlignment("Moving room back to previous location...");
             clickedRoom.setLocation(prevLocation);
-            roomsLayer.getView().repaint();
+            moveItemStarts.forEach((sprite, point) -> sprite.setLocation(point));
+            graphicsPanel.repaint();
         }
-        cancelAlignment(null);
     }
 
     private void alignNewRoom() {
@@ -143,12 +150,12 @@ public class AlignButton extends ToolButton {
                 cancelAlignment("Width and height must be greater than 0.");
                 return;
             }
-            Room newRoom = new Room(0, 0, width, height, (RoomType) RoomButton.getRoomTypeComboBox().getSelectedItem());
+            Room newRoom = new Room(-width, -height, width, height, (RoomType) RoomButton.getRoomTypeComboBox().getSelectedItem());
             roomsLayer.add(newRoom);
             try {
                 alignRooms(newRoom, currAlignment);
             } catch (Exception e) {
-                cancelAlignment("Overlapping detected, removing room.");
+                cancelAlignment("Removing room...");
                 roomsLayer.remove(newRoom);
             }
         }
@@ -200,11 +207,29 @@ public class AlignButton extends ToolButton {
                 }
             }
         }
+        
+        List<Sprite> moveableSprites = spritesLayer.getSprites().stream()
+                .filter(sprite -> sprite.intersects(room))
+                .filter(sprite -> roomsLayer.getRooms().stream().noneMatch(r -> r != room && sprite.intersects(r)))
+                .toList();
+        int dx = x - room.getX();
+        int dy = y - room.getY();
         room.setLocation(x, y);
-        roomsLayer.getView().repaint();
-        if (roomsLayer.isIntersecting(room)) {
-            throw new Exception("Room overlap detected.");
+        System.out.println(moveableSprites);
+        for (Sprite sprite : moveableSprites) {
+            moveItemStarts.put(sprite, sprite.getLocation());
+            Point translatedPoint = new Point(sprite.getLocation());
+            translatedPoint.translate(dx, dy);
+            sprite.setLocation(translatedPoint);
         }
+        graphicsPanel.repaint();
+        if (!validateAlignment()) {
+            throw new Exception("Misalignment detected.");
+        }
+    }
+
+    public boolean validateAlignment(){
+        return roomsLayer.checkForOverlap() && spritesLayer.checkForOverlap() && spritesLayer.validateSpritePlacement();
     }
 }
 
