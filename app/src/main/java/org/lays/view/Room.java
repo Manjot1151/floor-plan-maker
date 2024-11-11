@@ -91,7 +91,7 @@ public class Room extends Drawable {
 
     public boolean validateSprites() {
         for (Sprite sprite: spritesLayer.getSprites()) {
-            if(sprite.intersects(this) && !sprite.isValidOnRoom(this))  {
+            if(sprite.intersects(this) && (!sprite.isValidOnRoom(this) || (sprite instanceof Window)))  {
                 return false;
             }
         }
