@@ -34,6 +34,10 @@ public class Furniture extends Sprite {
         g.fillRect(0, 0, width, height);
     }
 
+    public FurnitureType getType() {
+        return type;
+    }
+
     @Override
     public Shape getHitBox() {
         return getBounds();

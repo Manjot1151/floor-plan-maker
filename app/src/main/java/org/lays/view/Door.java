@@ -53,7 +53,7 @@ public class Door extends RoomEdgeDrawable {
         RoomType lastIntersectingRoomType = null;
         for (Room room : roomsLayer.getRooms()) {
             if (this.intersects(room)) {
-                lastIntersectingRoomType = room.getRoomType();
+                lastIntersectingRoomType = room.getType();
                 n_intersects += 1;
 
                 if (!this.isValidOnRoom(room)) {

@@ -48,7 +48,7 @@ public class Room extends Drawable {
         return getBounds();
     }
 
-    public RoomType getRoomType() {
+    public RoomType getType() {
         return roomType;
     }
 

@@ -1,6 +1,5 @@
 package org.lays;
 
-import org.lays.view.FurnitureType;
 import org.lays.view.PlanFrame;
 
 public class Main {

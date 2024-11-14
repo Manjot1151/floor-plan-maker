@@ -56,13 +56,4 @@ public enum FurnitureType {
         }
         return sb.toString().trim();
     }
-
-    public static FurnitureType getFurnitureByName(String furnitureName) {
-        for (FurnitureType furnitureType : values()) {
-            if (furnitureType.name().equals(furnitureName)) {
-                return furnitureType;
-            }
-        }
-        return null;
-    }
 }

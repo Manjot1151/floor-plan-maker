@@ -2,8 +2,11 @@ package org.lays.view;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
+import org.lays.io.Open;
+import org.lays.io.Save;
 import org.lays.view.panels.ButtonsPanel;
 
 public class MainPane extends JPanel {
@@ -25,6 +28,11 @@ public class MainPane extends JPanel {
         mainPanel.add(buttonsPanel, BorderLayout.WEST);
         mainPanel.add(canvas, BorderLayout.CENTER);
         
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(new Save());
+        menuBar.add(new Open());
+        mainPanel.add(menuBar, BorderLayout.NORTH);
+
         add(mainPanel);
     }
 }
