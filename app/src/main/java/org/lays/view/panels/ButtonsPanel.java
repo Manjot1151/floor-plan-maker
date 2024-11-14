@@ -32,7 +32,7 @@ public class ButtonsPanel extends JPanel {
 
         JPanel options = new JPanel();
         options.setLayout(new FlowLayout());
-        options.setPreferredSize(new Dimension(150, 300));
+        options.setPreferredSize(new Dimension(150, 150));
         options.setOpaque(false);
 
         add(tools, BorderLayout.NORTH);
@@ -44,8 +44,9 @@ public class ButtonsPanel extends JPanel {
         tools.add(new MoveButton());
         tools.add(new RoomButton());
         tools.add(new DoorButton());
-        tools.add(new AlignButton());
         tools.add(new WindowButton());
+        tools.add(new FurnitureButton());
+        tools.add(new AlignButton());
 
         // togglables
         togglables.add(new SnapButton());
@@ -53,5 +54,7 @@ public class ButtonsPanel extends JPanel {
         // options
         options.add(new JLabel("Room type:"));
         options.add(RoomButton.getRoomTypeComboBox());
+        options.add(new JLabel("Furniture type:"));
+        options.add(FurnitureButton.getFurnitureTypeComboBox());
     }
 }

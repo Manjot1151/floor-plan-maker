@@ -12,8 +12,8 @@ import org.lays.view.panels.RoomsLayer;
 import org.lays.view.panels.SpritesLayer;
 
 public class Room extends Drawable {
-    public static SpritesLayer spritesLayer = Canvas.getInstance().getSpritesLayer();
-    public static RoomsLayer roomsLayer = Canvas.getInstance().getRoomsLayer();
+    private static SpritesLayer spritesLayer = Canvas.getInstance().getSpritesLayer();
+    private static RoomsLayer roomsLayer = Canvas.getInstance().getRoomsLayer();
 
     private RoomType roomType;
     private static int wallThickness = 3;
@@ -64,9 +64,7 @@ public class Room extends Drawable {
         Graphics2D g2d = (Graphics2D) g.create();
 
         g2d.setColor(new Color(100, 100, 100, 70));
-        if (this instanceof Room) {
-            g2d.setColor(((Room) this).getColor());
-        }
+        g2d.setColor(this.getColor());
         if (isSelected()) {
             Color selectedColor = new Color(
                     (int) (selectOverlay.getRed() * (overlayOpacity) + g2d.getColor().getRed() * (1-overlayOpacity)),
