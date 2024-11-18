@@ -214,7 +214,7 @@ public class AlignButton extends ToolButton {
                 .toList();
         double dx = x - room.getX();
         double dy = y - room.getY();
-        room.setLocation(new Point2D.Double());
+        room.setLocation(new Point2D.Double(x, y));
         for (Sprite sprite : moveableSprites) {
             moveItemStarts.put(sprite, sprite.getLocation());
             Point2D translatedPoint = new Point2D.Double(sprite.getX() + dx, sprite.getY() + dy);
