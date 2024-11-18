@@ -48,6 +48,7 @@ public class ButtonsPanel extends JPanel {
         tools.add(new FurnitureButton());
         tools.add(new AlignButton());
         tools.add(new RotateButton());
+        tools.add(new DeleteButton());
 
         // togglables
         togglables.add(new SnapButton());

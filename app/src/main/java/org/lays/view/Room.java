@@ -70,7 +70,7 @@ public class Room extends Drawable {
         for (Sprite s: spritesLayer.getSprites()) {
             if (!s.intersects(this)) {
                 continue;
-            }  
+            }
 
             boolean isOwned = true;
             for (Room r: roomsLayer.getRooms()) {
