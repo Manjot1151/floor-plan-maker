@@ -12,13 +12,11 @@ import org.lays.view.Drawable;
 import org.lays.view.Sprite;
 import org.lays.view.ToolButton;
 import org.lays.view.panels.GraphicsPanel;
-import org.lays.view.panels.RoomsLayer;
 import org.lays.view.panels.SpritesLayer;
 
 public class MoveButton extends ToolButton {
     private GraphicsPanel graphicsPanel = Canvas.getInstance().getGraphicsPanel();
     private SpritesLayer spritesLayer = graphicsPanel.getSpritesLayer();
-    private RoomsLayer roomsLayer = graphicsPanel.getRoomsLayer();
     private Point start;
     private HashMap<Drawable, Point2D> moveItemStarts = new HashMap<>();
 
@@ -49,14 +47,9 @@ public class MoveButton extends ToolButton {
         moveShapes(e.getPoint());
     }
 
-    public boolean validateMove(){
-        return roomsLayer.checkForOverlap() && spritesLayer.checkForOverlap() && spritesLayer.validateSpritePlacement();
-    }
-
-
     @Override
     public void onMouseReleased(MouseEvent e) {
-        if (!validateMove()) {
+        if (!graphicsPanel.validateCanvas()) {
             JOptionPane.showMessageDialog(null, "Moving Shapes back to their previous location", "Misalignment Detected", JOptionPane.ERROR_MESSAGE);
             abortMove();
         }
