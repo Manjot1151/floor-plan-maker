@@ -70,7 +70,7 @@ public abstract class RoomEdgeDrawable extends Sprite {
     }
 
     public double getMinX() {
-        return Math.min(start.getX(), end.getY());
+        return Math.min(start.getX(), end.getX());
     }
 
     public double getMaxX() {
