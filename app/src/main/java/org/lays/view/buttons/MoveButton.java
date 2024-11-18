@@ -2,6 +2,7 @@ package org.lays.view.buttons;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
@@ -11,15 +12,13 @@ import org.lays.view.Drawable;
 import org.lays.view.Sprite;
 import org.lays.view.ToolButton;
 import org.lays.view.panels.GraphicsPanel;
-import org.lays.view.panels.RoomsLayer;
 import org.lays.view.panels.SpritesLayer;
 
 public class MoveButton extends ToolButton {
     private GraphicsPanel graphicsPanel = Canvas.getInstance().getGraphicsPanel();
-    private RoomsLayer roomsLayer = graphicsPanel.getRoomsLayer();
     private SpritesLayer spritesLayer = graphicsPanel.getSpritesLayer();
     private Point start;
-    private HashMap<Drawable, Point> moveItemStarts = new HashMap<>();
+    private HashMap<Drawable, Point2D> moveItemStarts = new HashMap<>();
 
     public MoveButton() {
         super("Move");
@@ -48,14 +47,9 @@ public class MoveButton extends ToolButton {
         moveShapes(e.getPoint());
     }
 
-    public boolean validateMove(){
-        return roomsLayer.checkForOverlap() && spritesLayer.checkForOverlap() && spritesLayer.validateSpritePlacement();
-    }
-
-
     @Override
     public void onMouseReleased(MouseEvent e) {
-        if (!validateMove()) {
+        if (!graphicsPanel.validateCanvas()) {
             JOptionPane.showMessageDialog(null, "Moving Shapes back to their previous location", "Misalignment Detected", JOptionPane.ERROR_MESSAGE);
             abortMove();
         }
@@ -79,9 +73,8 @@ public class MoveButton extends ToolButton {
 
 
         moveItemStarts.entrySet().forEach(entry -> {
-            Point translatedPoint = (Point)entry.getValue().clone();
-            translatedPoint.translate(dx, dy);
-            entry.getKey().setLocation(translatedPoint);
+            Point2D startPoint = (Point2D)entry.getValue().clone();
+            entry.getKey().setLocation(new Point2D.Double(startPoint.getX() + dx, startPoint.getY() + dy));
         });
 
         graphicsPanel.repaint();

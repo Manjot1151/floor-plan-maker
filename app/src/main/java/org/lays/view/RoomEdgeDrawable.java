@@ -1,91 +1,120 @@
 package org.lays.view;
 
-import java.awt.Point;
 import java.awt.geom.Line2D;
-import java.awt.Shape;
-import java.awt.Rectangle;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.Graphics;
 
 import org.lays.view.panels.SpritesLayer;
 
 public abstract class RoomEdgeDrawable extends Sprite {
     SpritesLayer spritesLayer = Canvas.getInstance().getSpritesLayer();
-    protected Point start;
-    protected Point end;
-    protected static int wallThickness  = 3;
+    protected Point2D start;
+    protected Point2D end;
+    protected static int wallThickness = 3;
     protected static int margin = 10;
 
-    public RoomEdgeDrawable(Point start, Point end) {
+    public RoomEdgeDrawable(Point2D start, Point2D end) {
         this.start = start;
         setEnd(end);
     }
 
-    public RoomEdgeDrawable(int startX,int startY, int endX, int endY) {
-        this.start = new Point(startX, startY);
-        setEnd(new Point(endX, endY));
+    public RoomEdgeDrawable(double startX, double startY, double endX, double endY) {
+        this.start = new Point2D.Double(startX, startY);
+        setEnd(new Point2D.Double(endX, endY));
     }
 
     @Override
-    public Point getLocation() {
+    public Point2D getLocation() {
+        return getStart();
+    }
+
+    @Override
+    public void setLocation(Point2D point) {
+        setStart(point);
+    }
+
+    public void setStart(Point2D point) {
+        double dx = point.getX() - start.getX();
+        double dy = point.getY() - start.getY();
+        this.start = point;
+        this.end = new Point2D.Double(end.getX() + dx , end.getY() + dy);
+    }
+
+    public void setEnd(Point2D end) {
+        this.end = calcOrthoEnd(start, end);
+    }
+
+    public Point2D getStart() {
         return start;
     }
 
+    public Point2D getEnd() {
+        return end;
+    }
+
     @Override
-    public void setLocation(Point point) {
-        int dx = point.x - start.x;
-        int dy = point.y - start.y;
+    public void rotate(int numQuadrants) {}
 
-        this.start = point;
-
-        this.end.x += dx;
-        this.end.y += dy;
+    @Override
+    public void rotateOnRoom(Room room, int numQuadrants) {
+        Point2D center = room.getCenter();
+        this.start = Utils.rotatePoint(start, center, numQuadrants);
+        this.end = Utils.rotatePoint(end, center, numQuadrants);
     }
 
     public boolean isVertical() {
-        return start.x == end.x;
+        return Double.compare(start.getX(), end.getX()) == 0;
     }
 
     public boolean isHorizontal() {
-        return start.y == end.y;
-    }
-
-    public Point getStart() {
-        return start;
-    }
-    public Point getEnd() {
-        return end;
+        return Double.compare(start.getY(), end.getY()) == 0;
     }
 
     public boolean isPoint() {
         return isVertical() && isHorizontal();
     }
 
-    public int getMinX() {
-        return Math.min(start.x, end.x);
+    public double getMinX() {
+        return Math.min(start.getX(), end.getX());
     }
 
-    public int getMaxX() {
-        return Math.max(start.x, end.x);
+    public double getMaxX() {
+        return Math.max(start.getX(), end.getX());
     }
 
-    public int getMinY() {
-        return Math.min(start.y, end.y);
+    public double getMinY() {
+        return Math.min(start.getY(), end.getY());
     }
 
-    public int getMaxY() {
-        return Math.max(start.y, end.y);
+    public double getMaxY() {
+        return Math.max(start.getY(), end.getY());
     }
     
-    protected Point calcOrthoEnd(Point start, Point end) {
-        int dispY = end.x - start.x;
-        int dispX = end.y - start.y;
+    protected Point2D calcOrthoEnd(Point2D start, Point2D end) {
+        double dispY = end.getX() - start.getX();
+        double dispX = end.getY() - start.getY();
         if (Math.abs(dispX) <= Math.abs(dispY)) {
-            return new Point(end.x, start.y);
+            return new Point2D.Double(end.getX(), start.getY());
         } else {
-            return new Point(start.x, end.y);
+            return new Point2D.Double(start.getX(), end.getY());
         }
     }
 
+    @Override
+    public Point2D getCenter() {
+        return new Point2D.Double((start.getX() + end.getX()) / 2, (start.getY() + end.getY()) / 2);
+    }
+
+    @Override
+    public void setCenterPoint(Point2D point) {
+        Point2D center = getCenter();
+        double dx = point.getX() - center.getX();
+        double dy = point.getY() - center.getY();
+
+
+        setStart(new Point2D.Double(start.getX() + dx, start.getY() + dy));
+    }
 
     @Override
     public boolean intersects(Drawable drawable)   {
@@ -101,29 +130,28 @@ public abstract class RoomEdgeDrawable extends Sprite {
     }
 
 
-    public void setEnd(Point end) {
-        this.end = calcOrthoEnd(start, end);
-    }
-
     public Line2D getLine() {
         return new Line2D.Float(start, end);
     }
 
     @Override
-    public Shape getHitBox() {
+    public Rectangle2D getBounds() {
         if (isVertical()) {
-            return new Rectangle(start.x - margin, getMinY() + wallThickness, 2 * margin, Math.abs(start.y - end.y) - (2*wallThickness));
+            return new Rectangle2D.Double(start.getX() - margin, getMinY() + wallThickness, 2 * margin, Math.abs(start.getY() - end.getY()) - (2*wallThickness));
         } else {
-            return new Rectangle(getMinX() + wallThickness, start.y - margin, Math.abs(start.x - end.x) - (2*wallThickness), 2*margin);
+            return new Rectangle2D.Double(getMinX() + wallThickness, start.getY() - margin, Math.abs(start.getX() - end.getX()) - (2*wallThickness), 2*margin);
         }
     }
 
-    @Override
-    public Shape getVisibleShape() {
+    public Line2D getVisibleLine() {
+        if (isPoint()) {
+            return new Line2D.Double(start,start);
+        }
+
         if (isVertical()) {
-            return new Line2D.Float(start.x, getMinY() + wallThickness, start.x, getMaxY() - wallThickness);
+            return new Line2D.Double(start.getX(), getMinY() + wallThickness, start.getX(), getMaxY() - wallThickness);
         } else {
-            return new Line2D.Float(getMinX() + wallThickness, start.y, getMaxX() - wallThickness, start.y);
+            return new Line2D.Double(getMinX() + wallThickness, start.getY(), getMaxX() - wallThickness, start.getY());
         }
     }
 
@@ -138,6 +166,10 @@ public abstract class RoomEdgeDrawable extends Sprite {
 
     public boolean isValidDrawable() {
         return hasValidDimensions() && hasValidPlacement() && spritesLayer.validateSpriteIntersections(this);
+    }
+
+    @Override
+    public void setBounds(Rectangle2D rect){
     }
 
     @Override

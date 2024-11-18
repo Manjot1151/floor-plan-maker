@@ -5,7 +5,8 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.geom.Point2D;
+
 import org.lays.view.panels.RoomsLayer;
 import org.lays.view.panels.SpritesLayer;
 
@@ -15,20 +16,20 @@ public class Door extends RoomEdgeDrawable {
     private static BasicStroke wallStroke = new BasicStroke(wallThickness);
 
     public static class Factory implements EdgeDrawableFactory<Door> {
-        public Door fromPoints(Point start, Point end) {
+        public Door fromPoints(Point2D start, Point2D end) {
             return new Door(start, end);
         }
 
-        public Door fromCoordinates(int startX, int startY, int endX,int endY) {
+        public Door fromCoordinates(double startX, double startY, double endX,double endY) {
             return new Door(startX, startY, endX, endY);
         }
     }
 
-    public Door(Point start, Point end) {
+    public Door(Point2D start, Point2D end) {
         super(start, end);
     }
 
-    public Door(int startX, int startY, int endX, int endY) {
+    public Door(double startX, double startY, double endX, double endY) {
         super(startX, startY, endX, endY);
     }
 
@@ -43,7 +44,7 @@ public class Door extends RoomEdgeDrawable {
             g2d.setComposite(AlphaComposite.Clear);
         }
 
-        g2d.draw(getVisibleShape());
+        g2d.draw(getVisibleLine());
         g2d.dispose();
     }
 

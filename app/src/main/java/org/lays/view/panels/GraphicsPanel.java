@@ -28,6 +28,10 @@ public class GraphicsPanel extends JPanel {
         return this.sprites;
     }
 
+    public boolean validateCanvas(){
+        return rooms.checkForOverlap() && sprites.checkForOverlap() && sprites.validateSpritePlacement();
+    }
+
     public ArrayList<Drawable> getSelectedItems() {
         ArrayList<Drawable> selectedItems = new ArrayList<Drawable>();
         for (Sprite sprite: sprites.getSprites()) {

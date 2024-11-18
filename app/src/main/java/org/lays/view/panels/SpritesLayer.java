@@ -25,14 +25,12 @@ public class SpritesLayer {
 
     public void add(Sprite sprite) {
         sprites.add(sprite);
-        sprite.setVisible(false);
 
         view.repaint();
     }
 
     public void remove(Drawable sprite) {
         sprites.remove(sprite);
-        sprite.setVisible(false);
 
         view.repaint();
     }
@@ -51,10 +49,9 @@ public class SpritesLayer {
         return true;
     }
 
-
     public Sprite getClickedSprite(Point point) {
         for (Sprite sprite: getSprites()) {
-            if (sprite.getHitBox().contains(point)) {
+            if (sprite.getBounds().contains(point)) {
                 return sprite;
             }
         }

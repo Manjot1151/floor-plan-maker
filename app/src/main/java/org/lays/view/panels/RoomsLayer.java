@@ -23,14 +23,12 @@ public class RoomsLayer {
 
     public void add(Room room) {
         rooms.add(room);
-        room.setVisible(true);
 
         view.repaint();
     }
 
     public void remove(Room room) {
         rooms.remove(room);
-        room.setVisible(false);
 
         view.repaint();
     }

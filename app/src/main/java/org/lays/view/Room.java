@@ -4,22 +4,36 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 import org.lays.view.panels.RoomsLayer;
 import org.lays.view.panels.SpritesLayer;
+import java.util.ArrayList;
 
 public class Room extends Drawable {
     private static SpritesLayer spritesLayer = Canvas.getInstance().getSpritesLayer();
     private static RoomsLayer roomsLayer = Canvas.getInstance().getRoomsLayer();
 
     private RoomType roomType;
+    private Rectangle2D bounds;
     private static int wallThickness = 3;
 
     private static final Color selectOverlay = new Color(0, 0, 255, 100);
     private static final float overlayOpacity = 0.6f;
+
+
+    @Override
+    public void setBounds(Rectangle2D bounds)  {
+        this.bounds = bounds;
+    }
+
+    @Override
+    public Rectangle2D getBounds() {
+        return bounds;
+    }
 
     public Room(int x, int y, int width, int height, RoomType type) {
         super();
@@ -27,25 +41,20 @@ public class Room extends Drawable {
         this.roomType = type;
     }
 
-    public boolean isOnHorizontalEdge(Point point) {
-        Rectangle roomBounds = getBounds();
+    public boolean isOnHorizontalEdge(Point2D point) {
+        Rectangle2D roomBounds = getBounds();
         return (
-            point.x >= roomBounds.getMinX() && point.x <= roomBounds.getMaxX() && 
-            (Double.compare(point.y, roomBounds.getMinY()) == 0 || Double.compare(point.y, roomBounds.getMaxY()) == 0)
+            point.getX() >= roomBounds.getMinX() && point.getY() <= roomBounds.getMaxX() && 
+            (Double.compare(point.getY(), roomBounds.getMinY()) == 0 || Double.compare(point.getY(), roomBounds.getMaxY()) == 0)
         );
     }
 
-    public boolean isOnVerticalEdge(Point point) {
-        Rectangle roomBounds = getBounds();
+    public boolean isOnVerticalEdge(Point2D point) {
+        Rectangle2D roomBounds = getBounds();
         return (
-            point.y >= roomBounds.getMinY() && point.y <= roomBounds.getMaxY() && 
-            (Double.compare(point.x, roomBounds.getMinX()) == 0 || Double.compare(point.x, roomBounds.getMaxX()) == 0)
+            point.getY() >= roomBounds.getMinY() && point.getY() <= roomBounds.getMaxY() && 
+            (Double.compare(point.getX(), roomBounds.getMinX()) == 0 || Double.compare(point.getX(), roomBounds.getMaxX()) == 0)
         );
-    }
-
-    @Override 
-    public Shape getHitBox() {
-        return getBounds();
     }
 
     public RoomType getType() {
@@ -55,10 +64,38 @@ public class Room extends Drawable {
     public Color getColor() {
         return roomType.getColor();
     }
+    
+    
+    public ArrayList<Sprite> getOwnedSprites() {
+        ArrayList<Sprite> ownedSprites = new ArrayList<>();
+        for (Sprite s: spritesLayer.getSprites()) {
+            if (!s.intersects(this)) {
+                continue;
+            }  
 
-    public Shape getVisibleShape() {
-        return getHitBox();
+            boolean isOwned = true;
+            for (Room r: roomsLayer.getRooms()) {
+                if (r.equals(this)) {
+                    continue;
+                }            
+
+                if (r.intersects(s)) {
+                    isOwned = false;
+                    break;
+                }
+            }
+
+            if (isOwned) {
+                ownedSprites.add(s);
+            }
+        }
+        return ownedSprites;
     }
+
+    public void rotate(int numQuadrants) {
+        setBounds(Utils.rotateRectangle(getBounds(), numQuadrants));
+    }
+
 
     public void paintShape(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
@@ -74,7 +111,7 @@ public class Room extends Drawable {
             );
             g2d.setColor(selectedColor);
         }
-        Shape shape = getHitBox();
+        Shape shape = getBounds();
         g2d.fill(shape);
         g2d.setColor(Color.BLACK);
         g2d.setStroke(new BasicStroke(wallThickness));
@@ -84,7 +121,8 @@ public class Room extends Drawable {
     }
 
     public boolean hasValidDimensinons() {
-        return this.getWidth() != 0 && this.getHeight() != 0;
+        Rectangle2D bounds = getBounds();
+        return Double.compare(bounds.getWidth(), 0) != 0 && Double.compare(bounds.getHeight(), 0) != 0;
     }
 
     public boolean validateSprites() {

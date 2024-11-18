@@ -22,7 +22,7 @@ public class ButtonsPanel extends JPanel {
         
         JPanel tools = new JPanel();
         tools.setLayout(new FlowLayout());
-        tools.setPreferredSize(new Dimension(150, 500));
+        tools.setPreferredSize(new Dimension(150, 600));
         tools.setOpaque(false);
 
         JPanel togglables = new JPanel();
@@ -47,6 +47,7 @@ public class ButtonsPanel extends JPanel {
         tools.add(new WindowButton());
         tools.add(new FurnitureButton());
         tools.add(new AlignButton());
+        tools.add(new RotateButton());
 
         // togglables
         togglables.add(new SnapButton());

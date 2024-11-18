@@ -1,5 +1,7 @@
 package org.lays.view;
 
+import java.awt.geom.Point2D;
+
 import org.lays.view.panels.RoomsLayer;
 
 public abstract class Sprite extends Drawable {
@@ -11,6 +13,13 @@ public abstract class Sprite extends Drawable {
     // return false if check fails.
     public boolean validatePossibleSpriteInterersection(Sprite sprite) {
         return !this.intersects(sprite);
+    }
+
+    public void rotateOnRoom(Room room, int numQuadrants) {
+        Point2D center = room.getCenter();
+        Point2D movedCenter = Utils.rotatePoint(getCenter(), center, numQuadrants);
+        setCenterPoint(movedCenter);
+        rotate(numQuadrants);
     }
 
     public boolean shouldSoftSelect() {
