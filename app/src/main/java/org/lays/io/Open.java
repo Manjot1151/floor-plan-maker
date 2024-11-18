@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import org.lays.view.Canvas;
 import org.lays.view.Door;
@@ -76,8 +77,9 @@ public class Open extends JMenuItem {
                         }   
                     });
 
-                } catch (IOException e1) {
+                } catch (IOException | IllegalStateException e1) {
                     e1.printStackTrace();
+                    JOptionPane.showMessageDialog(fileChooser, "Could not open file.", "Error Opening File", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
