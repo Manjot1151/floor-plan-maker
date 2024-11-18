@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 import org.lays.view.panels.SpritesLayer;
@@ -16,6 +18,7 @@ public class Furniture extends Sprite {
     private FurnitureType type;
     private BufferedImage image;
     private BufferedImage selectedImage;
+    private int orientation;
 
     @Override
     public void setBounds(Rectangle2D rect) {
@@ -33,6 +36,7 @@ public class Furniture extends Sprite {
 
         int width = image.getWidth();
         int height = image.getHeight();
+        this.orientation = 0;
 
         setBounds(new Rectangle2D.Double(x, y, width, height));
 
@@ -43,6 +47,25 @@ public class Furniture extends Sprite {
         g.setColor(new Color(0, 0, 100, 50));
         g.fillRect(0, 0, width, height);
     }
+
+    public void rotate(int numQuadrants) {
+        rotateIntermediate(numQuadrants);
+        orientation = (orientation + numQuadrants) % 4;
+        if (orientation < 0) {
+            orientation += 4;
+        }
+    }
+
+    private void rotateIntermediate(int numQuadrants) {
+        AffineTransform tx = AffineTransform.getQuadrantRotateInstance(-numQuadrants, image.getWidth() / 2, image.getHeight() / 2);
+        AffineTransformOp txop = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+
+        this.image = txop.filter(this.image, null);
+        this.selectedImage = txop.filter(this.selectedImage, null);
+
+        setBounds(Utils.rotateRectangle(getBounds(),numQuadrants));
+    }
+
 
     public FurnitureType getType() {
         return type;

@@ -11,6 +11,7 @@ import java.awt.geom.Rectangle2D;
 
 import org.lays.view.panels.RoomsLayer;
 import org.lays.view.panels.SpritesLayer;
+import java.util.ArrayList;
 
 public class Room extends Drawable {
     private static SpritesLayer spritesLayer = Canvas.getInstance().getSpritesLayer();
@@ -63,9 +64,38 @@ public class Room extends Drawable {
     public Color getColor() {
         return roomType.getColor();
     }
+    
+    
+    public ArrayList<Sprite> getOwnedSprites() {
+        ArrayList<Sprite> ownedSprites = new ArrayList<>();
+        for (Sprite s: spritesLayer.getSprites()) {
+            if (!s.intersects(this)) {
+                continue;
+            }  
 
-    
-    
+            boolean isOwned = true;
+            for (Room r: roomsLayer.getRooms()) {
+                if (r.equals(this)) {
+                    continue;
+                }            
+
+                if (r.intersects(s)) {
+                    isOwned = false;
+                    break;
+                }
+            }
+
+            if (isOwned) {
+                ownedSprites.add(s);
+            }
+        }
+        return ownedSprites;
+    }
+
+    public void rotate(int numQuadrants) {
+        setBounds(Utils.rotateRectangle(getBounds(), numQuadrants));
+    }
+
 
     public void paintShape(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();

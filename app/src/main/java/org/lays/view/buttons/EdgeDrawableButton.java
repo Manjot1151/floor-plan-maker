@@ -40,7 +40,6 @@ public abstract class EdgeDrawableButton<T extends RoomEdgeDrawable, F extends E
         } else {
             mergeDrawableIfPossible(currentEdgeDrawable);
         }
-        System.out.println(spritesPanel.getSprites().size());
 
         spritesPanel.getView().repaint();
     }

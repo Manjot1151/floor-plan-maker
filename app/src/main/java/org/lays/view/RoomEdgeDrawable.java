@@ -53,8 +53,14 @@ public abstract class RoomEdgeDrawable extends Sprite {
         return end;
     }
 
-        start.setLocation(point);
-        end.setLocation(new Point2D.Double(end.getX() + dx , end.getY() + dy));
+    @Override
+    public void rotate(int numQuadrants) {}
+
+    @Override
+    public void rotateOnRoom(Room room, int numQuadrants) {
+        Point2D center = room.getCenter();
+        this.start = Utils.rotatePoint(start, center, numQuadrants);
+        this.end = Utils.rotatePoint(end, center, numQuadrants);
     }
 
     public boolean isVertical() {

@@ -75,6 +75,7 @@ public abstract class Drawable{
         return new Point2D.Double(bounds.getCenterX(), bounds.getCenterY());
     }
 
+    public abstract void rotate(int numQuadrants);
 
     public boolean intersects(Drawable drawable){
         return getBounds().intersects(drawable.getBounds());
