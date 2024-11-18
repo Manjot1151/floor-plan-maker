@@ -2,6 +2,7 @@ package org.lays.view.buttons;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
@@ -16,10 +17,10 @@ import org.lays.view.panels.SpritesLayer;
 
 public class MoveButton extends ToolButton {
     private GraphicsPanel graphicsPanel = Canvas.getInstance().getGraphicsPanel();
-    private RoomsLayer roomsLayer = graphicsPanel.getRoomsLayer();
     private SpritesLayer spritesLayer = graphicsPanel.getSpritesLayer();
+    private RoomsLayer roomsLayer = graphicsPanel.getRoomsLayer();
     private Point start;
-    private HashMap<Drawable, Point> moveItemStarts = new HashMap<>();
+    private HashMap<Drawable, Point2D> moveItemStarts = new HashMap<>();
 
     public MoveButton() {
         super("Move");
@@ -79,9 +80,8 @@ public class MoveButton extends ToolButton {
 
 
         moveItemStarts.entrySet().forEach(entry -> {
-            Point translatedPoint = (Point)entry.getValue().clone();
-            translatedPoint.translate(dx, dy);
-            entry.getKey().setLocation(translatedPoint);
+            Point2D startPoint = (Point2D)entry.getValue().clone();
+            entry.getKey().setLocation(new Point2D.Double(startPoint.getX() + dx, startPoint.getY() + dy));
         });
 
         graphicsPanel.repaint();

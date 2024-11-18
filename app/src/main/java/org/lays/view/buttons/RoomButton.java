@@ -1,6 +1,7 @@
 package org.lays.view.buttons;
 
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComboBox;
 
@@ -64,7 +65,7 @@ public class RoomButton extends ToolButton {
         int y = Math.min(rectStart.y, rectEnd.y);
         int width = Math.abs(rectEnd.x - rectStart.x);
         int height = Math.abs(rectEnd.y - rectStart.y);
-        currentRoom.setBounds(x, y, width, height);
+        currentRoom.setBounds(new Rectangle2D.Double(x, y, width, height));
         roomsLayer.getView().repaint();
     }
 

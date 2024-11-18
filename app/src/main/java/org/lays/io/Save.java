@@ -60,10 +60,10 @@ public class Save extends JMenuItem {
                     } else if (sprite instanceof RoomEdgeDrawable) {
                         RoomEdgeDrawable edgeDrawable = (RoomEdgeDrawable) sprite;
                         JsonObject edgeDrawableJson = new JsonObject();
-                        edgeDrawableJson.addProperty("startX", edgeDrawable.getStart().x);
-                        edgeDrawableJson.addProperty("startY", edgeDrawable.getStart().y);
-                        edgeDrawableJson.addProperty("endX", edgeDrawable.getEnd().x);
-                        edgeDrawableJson.addProperty("endY", edgeDrawable.getEnd().y);
+                        edgeDrawableJson.addProperty("startX", edgeDrawable.getStart().getX());
+                        edgeDrawableJson.addProperty("startY", edgeDrawable.getStart().getY());
+                        edgeDrawableJson.addProperty("endX", edgeDrawable.getEnd().getX());
+                        edgeDrawableJson.addProperty("endY", edgeDrawable.getEnd().getY());
                         edgeDrawableJson.addProperty("type", edgeDrawable.getClass().getSimpleName());
                         edgeDrawables.add(edgeDrawableJson);
                     }

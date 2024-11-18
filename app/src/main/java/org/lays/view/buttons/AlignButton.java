@@ -1,8 +1,8 @@
 package org.lays.view.buttons;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,10 +25,10 @@ public class AlignButton extends ToolButton {
     private final RoomsLayer roomsLayer = graphicsPanel.getRoomsLayer();
     private final SpritesLayer spritesLayer = graphicsPanel.getSpritesLayer();
     
-    private HashMap<Drawable, Point> moveItemStarts = new HashMap<>();
+    private HashMap<Drawable, Point2D> moveItemStarts = new HashMap<>();
 
     private Alignment currAlignment;
-    private Point prevLocation;
+    private Point2D prevLocation;
 
     public AlignButton() {
         super("Align");
@@ -164,10 +164,10 @@ public class AlignButton extends ToolButton {
 
     private void alignRooms(Room room, Alignment alignment) throws Exception {
         prevLocation = room.getLocation();
-        int x = alignment.room.getX();
-        int y = alignment.room.getY();
-        int width = alignment.room.getWidth();
-        int height = alignment.room.getHeight();
+        double x = alignment.room.getX();
+        double y = alignment.room.getY();
+        double width = alignment.room.getWidth();
+        double height = alignment.room.getHeight();
 
         switch (alignment.direction) {
             case NORTH -> {
@@ -212,14 +212,12 @@ public class AlignButton extends ToolButton {
                 .filter(sprite -> sprite.intersects(room))
                 .filter(sprite -> roomsLayer.getRooms().stream().noneMatch(r -> r != room && sprite.intersects(r)))
                 .toList();
-        int dx = x - room.getX();
-        int dy = y - room.getY();
-        room.setLocation(x, y);
-        System.out.println(moveableSprites);
+        double dx = x - room.getX();
+        double dy = y - room.getY();
+        room.setLocation(new Point2D.Double());
         for (Sprite sprite : moveableSprites) {
             moveItemStarts.put(sprite, sprite.getLocation());
-            Point translatedPoint = new Point(sprite.getLocation());
-            translatedPoint.translate(dx, dy);
+            Point2D translatedPoint = new Point2D.Double(sprite.getX() + dx, sprite.getY() + dy);
             sprite.setLocation(translatedPoint);
         }
         graphicsPanel.repaint();
