@@ -12,6 +12,7 @@ import org.lays.view.RoomType;
 import org.lays.view.ToolButton;
 import org.lays.view.panels.RoomsLayer;
 
+import java.awt.Dimension;
 import java.awt.Point;
 
 public class RoomButton extends ToolButton {
@@ -27,6 +28,7 @@ public class RoomButton extends ToolButton {
 
         roomTypeComboBox = new JComboBox<>(RoomType.values());
         roomTypeComboBox.setFocusable(false);
+        roomTypeComboBox.setPreferredSize(new Dimension(125, 25));
         this.currentRoomType = (RoomType) roomTypeComboBox.getSelectedItem();
         roomTypeComboBox.addActionListener(e -> this.currentRoomType = (RoomType) roomTypeComboBox.getSelectedItem());
     }

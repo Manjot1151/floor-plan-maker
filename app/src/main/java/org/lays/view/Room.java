@@ -4,7 +4,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -35,9 +34,9 @@ public class Room extends Drawable {
         return bounds;
     }
 
-    public Room(int x, int y, int width, int height, RoomType type) {
+    public Room(double x, double y, double width, double height, RoomType type) {
         super();
-        setBounds(new Rectangle(x, y, width, height));
+        setBounds(new Rectangle2D.Double(x, y, width, height));
         this.roomType = type;
     }
 

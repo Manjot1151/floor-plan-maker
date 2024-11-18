@@ -19,7 +19,6 @@ import org.lays.view.panels.RoomsLayer;
 import org.lays.view.panels.SpritesLayer;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
@@ -30,15 +29,16 @@ public class Open extends JMenuItem {
     
     public Open() {
         super("Open");
+        setSize(100, 50);
         addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showOpenDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 try (JsonReader reader = new JsonReader(new FileReader(file))) {
-                    JsonElement parsedJson = JsonParser.parseReader(reader);
-                    JsonArray rooms = parsedJson.getAsJsonObject().getAsJsonArray("rooms");
-                    JsonObject sprites = parsedJson.getAsJsonObject().getAsJsonObject("sprites");
+                    JsonObject parsedJson = JsonParser.parseReader(reader).getAsJsonObject();
+                    JsonArray rooms = parsedJson.getAsJsonArray("rooms");
+                    JsonObject sprites = parsedJson.getAsJsonObject("sprites");
                     JsonArray furnitures = sprites.getAsJsonArray("furnitures");
                     JsonArray edgeDrawables = sprites.getAsJsonArray("edgeDrawables");
 
@@ -47,28 +47,32 @@ public class Open extends JMenuItem {
 
                     rooms.forEach(room -> {
                         JsonObject roomJson = room.getAsJsonObject();
-                        int x = roomJson.get("x").getAsInt();
-                        int y = roomJson.get("y").getAsInt();
-                        int width = roomJson.get("width").getAsInt();
-                        int height = roomJson.get("height").getAsInt();
+                        double x = roomJson.get("x").getAsDouble();
+                        double y = roomJson.get("y").getAsDouble();
+                        double width = roomJson.get("width").getAsDouble();
+                        double height = roomJson.get("height").getAsDouble();
                         String type = roomJson.get("type").getAsString();
                         roomsLayer.add(new Room(x, y, width, height, RoomType.valueOf(type)));
                     });
 
                     furnitures.forEach(furniture -> {
                         JsonObject furnitureJson = furniture.getAsJsonObject();
-                        int x = furnitureJson.get("x").getAsInt();
-                        int y = furnitureJson.get("y").getAsInt();
+                        double x = furnitureJson.get("x").getAsDouble();
+                        double y = furnitureJson.get("y").getAsDouble();
+                        int orientation = furnitureJson.get("orientation").getAsInt();
                         String type = furnitureJson.get("type").getAsString();
-                        spritesLayer.add(new Furniture(x, y, FurnitureType.valueOf(type)));
+                        
+                        Furniture newFurniture = new Furniture(x, y, FurnitureType.valueOf(type));
+                        newFurniture.rotate(orientation);
+                        spritesLayer.add(newFurniture);
                     });
 
                     edgeDrawables.forEach(edgeDrawable -> {
                         JsonObject edgeDrawableJson = edgeDrawable.getAsJsonObject();
-                        int startX = edgeDrawableJson.get("startX").getAsInt();
-                        int startY = edgeDrawableJson.get("startY").getAsInt();
-                        int endX = edgeDrawableJson.get("endX").getAsInt();
-                        int endY = edgeDrawableJson.get("endY").getAsInt();
+                        double startX = edgeDrawableJson.get("startX").getAsDouble();
+                        double startY = edgeDrawableJson.get("startY").getAsDouble();
+                        double endX = edgeDrawableJson.get("endX").getAsDouble();
+                        double endY = edgeDrawableJson.get("endY").getAsDouble();
                         String type = edgeDrawableJson.get("type").getAsString();
                         if (type.equals("Door")) {
                             spritesLayer.add(new Door(startX, startY, endX, endY));
@@ -77,7 +81,7 @@ public class Open extends JMenuItem {
                         }   
                     });
 
-                } catch (IOException | IllegalStateException e1) {
+                } catch (IOException e1) {
                     e1.printStackTrace();
                     JOptionPane.showMessageDialog(fileChooser, "Could not open file.", "Error Opening File", JOptionPane.ERROR_MESSAGE);
                 }

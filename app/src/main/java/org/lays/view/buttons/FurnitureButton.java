@@ -12,6 +12,7 @@ import org.lays.view.FurnitureType;
 import org.lays.view.ToolButton;
 import org.lays.view.panels.SpritesLayer;
 
+import java.awt.Dimension;
 import java.awt.Point;
 
 public class FurnitureButton extends ToolButton {
@@ -26,6 +27,7 @@ public class FurnitureButton extends ToolButton {
 
         furnitureTypeComboBox = new JComboBox<>(FurnitureType.values());
         furnitureTypeComboBox.setFocusable(false);
+        furnitureTypeComboBox.setPreferredSize(new Dimension(125, 25));
         this.currentFurnitureType = (FurnitureType) furnitureTypeComboBox.getSelectedItem();
         furnitureTypeComboBox.addActionListener(e -> this.currentFurnitureType = (FurnitureType) furnitureTypeComboBox.getSelectedItem());
     }

@@ -22,7 +22,7 @@ public class ButtonsPanel extends JPanel {
         
         JPanel tools = new JPanel();
         tools.setLayout(new FlowLayout());
-        tools.setPreferredSize(new Dimension(150, 600));
+        tools.setPreferredSize(new Dimension(150, 500));
         tools.setOpaque(false);
 
         JPanel togglables = new JPanel();

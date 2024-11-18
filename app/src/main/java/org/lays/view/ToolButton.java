@@ -15,7 +15,7 @@ public abstract class ToolButton extends JButton {
 
     public ToolButton(String name) {
         super(name);
-        setPreferredSize(new Dimension(80, 50));
+        setPreferredSize(new Dimension(100, 50));
         setBackground(unselectedColor);
         setForeground(new Color(0xf8e4e9));
         setFocusable(false);

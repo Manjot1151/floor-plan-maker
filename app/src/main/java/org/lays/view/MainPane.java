@@ -1,6 +1,7 @@
 package org.lays.view;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -29,6 +30,7 @@ public class MainPane extends JPanel {
         mainPanel.add(canvas, BorderLayout.CENTER);
         
         JMenuBar menuBar = new JMenuBar();
+        menuBar.setLayout(new FlowLayout());
         menuBar.add(new Save());
         menuBar.add(new Open());
         mainPanel.add(menuBar, BorderLayout.NORTH);

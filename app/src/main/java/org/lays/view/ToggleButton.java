@@ -15,7 +15,7 @@ public abstract class ToggleButton extends JButton {
 
     public ToggleButton(String name, boolean enabled) {
         super(name);
-        setPreferredSize(new Dimension(80, 50));
+        setPreferredSize(new Dimension(100, 50));
         setBackground(unselectedColor);
         setForeground(new Color(0xf8e4e9));
         setFocusable(false);

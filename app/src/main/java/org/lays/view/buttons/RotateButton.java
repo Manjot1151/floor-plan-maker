@@ -35,20 +35,19 @@ public class RotateButton extends ToolButton {
         }
     }
 
-
     private void rotateRoomAndValidate(Room room, int numQuadrants) {
         ArrayList<Sprite> ownedSprites = room.getOwnedSprites();
-        room.rotate(1);
+        room.rotate(numQuadrants);
         for (Sprite sprite : ownedSprites) {
-            sprite.rotateOnRoom(room, 1);
+            sprite.rotateOnRoom(room, numQuadrants);
         }
         graphicsPanel.repaint();
 
         if (!graphicsPanel.validateCanvas()) {
             JOptionPane.showMessageDialog(null, "Moving Shape Back to Previous Position", "Misalignment Detected", JOptionPane.ERROR_MESSAGE);
-            room.rotate(-1);
+            room.rotate(-numQuadrants);
             for (Sprite sprite : ownedSprites) {
-                sprite.rotateOnRoom(room, -1);
+                sprite.rotateOnRoom(room, -numQuadrants);
             }
             graphicsPanel.repaint();
         }
@@ -81,12 +80,7 @@ public class RotateButton extends ToolButton {
 
     @Override
     public void onMouseDragged(MouseEvent e) {
-        // RoomsLayer rooms = graphicsPanel.getRoomsLayer();
-        // rooms.getRooms().forEach(shape -> shape.setSelected(false));
-        
-        // // TODO: Implement selection box
-        
-        // graphicsPanel.repaint();
+
     }
 
     @Override

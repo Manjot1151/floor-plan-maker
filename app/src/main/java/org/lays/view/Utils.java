@@ -12,6 +12,10 @@ public class Utils {
             numQuadrants += 2;
         }
 
+        if (numQuadrants == 3) {
+            numQuadrants = 1;
+        }
+        
         Point2D newTopLeft = rotatePoint(new Point2D.Double(rect.getMaxX(), rect.getMinY()), new Point2D.Double(rect.getCenterX(), rect.getCenterY()), numQuadrants);
         return new Rectangle2D.Double(newTopLeft.getX(), newTopLeft.getY(), rect.getHeight(), rect.getWidth());
     }

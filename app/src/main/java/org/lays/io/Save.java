@@ -25,6 +25,7 @@ public class Save extends JMenuItem {
 
     public Save() {
         super("Save");
+        setSize(100, 50);
         addActionListener(e -> { 
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setSelectedFile(new File("plan.json"));
@@ -55,6 +56,7 @@ public class Save extends JMenuItem {
                         JsonObject furnitureJson = new JsonObject();
                         furnitureJson.addProperty("x", furniture.getX());
                         furnitureJson.addProperty("y", furniture.getY());
+                        furnitureJson.addProperty("orientation", furniture.getOrientation());
                         furnitureJson.addProperty("type", furniture.getType().name());
                         furnitures.add(furnitureJson);
                     } else if (sprite instanceof RoomEdgeDrawable) {

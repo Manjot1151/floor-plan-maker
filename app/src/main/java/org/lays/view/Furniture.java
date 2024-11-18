@@ -30,7 +30,7 @@ public class Furniture extends Sprite {
         return bounds;
     }
 
-    public Furniture(int x, int y, FurnitureType type) {
+    public Furniture(double x, double y, FurnitureType type) {
         this.type = type;
         this.image = type.getImage();
 
@@ -63,10 +63,12 @@ public class Furniture extends Sprite {
         this.image = txop.filter(this.image, null);
         this.selectedImage = txop.filter(this.selectedImage, null);
 
-        setBounds(Utils.rotateRectangle(getBounds(),numQuadrants));
+        setBounds(Utils.rotateRectangle(getBounds(), numQuadrants));
     }
 
-
+    public int getOrientation() {
+        return orientation;
+    }
     public FurnitureType getType() {
         return type;
     }
