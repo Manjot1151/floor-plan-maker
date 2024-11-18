@@ -24,9 +24,35 @@ public abstract class RoomEdgeDrawable extends Sprite {
         setEnd(new Point2D.Double(endX, endY));
     }
 
+    @Override
+    public Point2D getLocation() {
+        return getStart();
+    }
+
+    @Override
+    public void setLocation(Point2D point) {
+        setStart(point);
+    }
+
     public void setStart(Point2D point) {
         double dx = point.getX() - start.getX();
         double dy = point.getY() - start.getY();
+        this.start = point;
+        this.end = new Point2D.Double(end.getX() + dx , end.getY() + dy);
+    }
+
+    public void setEnd(Point2D end) {
+        this.end = calcOrthoEnd(start, end);
+    }
+
+    public Point2D getStart() {
+        return start;
+    }
+
+    public Point2D getEnd() {
+        return end;
+    }
+
         start.setLocation(point);
         end.setLocation(new Point2D.Double(end.getX() + dx , end.getY() + dy));
     }
@@ -37,13 +63,6 @@ public abstract class RoomEdgeDrawable extends Sprite {
 
     public boolean isHorizontal() {
         return Double.compare(start.getY(), end.getY()) == 0;
-    }
-
-    public Point2D getStart() {
-        return start;
-    }
-    public Point2D getEnd() {
-        return end;
     }
 
     public boolean isPoint() {
@@ -104,9 +123,6 @@ public abstract class RoomEdgeDrawable extends Sprite {
         }
     }
 
-    public void setEnd(Point2D end) {
-        this.end = calcOrthoEnd(start, end);
-    }
 
     public Line2D getLine() {
         return new Line2D.Float(start, end);
