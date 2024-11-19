@@ -24,7 +24,7 @@ public enum FurnitureType {
     private BufferedImage image;
 
     FurnitureType(String filename, int size) {
-        String spritesPath = "app/src/main/resources/sprites/";
+        String spritesPath = Config.getInstance().getSpritesPath();
         this.path = spritesPath + filename;
         
         try {
