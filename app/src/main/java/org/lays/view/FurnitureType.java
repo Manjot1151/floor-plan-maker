@@ -11,7 +11,13 @@ public enum FurnitureType {
     BED("bed.png", 80),
     CHAIR("chair.png",40),
     COMMODE("commode.png", 40),
-    SOFA("sofa.png", 40),;
+    DINING_SET("dining.png", 60),
+    SHOWER("shower.png", 40),
+    KITCHEN_SINK("sink.png", 60),
+    SOFA("sofa.png", 60),
+    STOVE("stove.png", 40),
+    TABLE("table.png", 60),
+    WASHBASIN("washbasin.png", 40),;
 
     private String path;
     private int scale;
