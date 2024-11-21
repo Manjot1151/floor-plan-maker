@@ -55,7 +55,7 @@ public class Canvas extends JLayeredPane {
 
         this.snapIndicator = new SnapIndicator();
 
-        JPanel glassPane = new GraphicsPanel();
+        JPanel glassPane = new JPanel();
         glassPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
