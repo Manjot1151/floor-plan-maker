@@ -9,7 +9,7 @@ import org.lays.view.Grid;
 public class Grid extends JComponent {
     public Grid(int gridSize) {
         super();
-        setVisible(true);
+        setVisible(false);
     }
 
     public void paintComponent(Graphics g) {

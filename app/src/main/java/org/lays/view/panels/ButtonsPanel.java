@@ -52,7 +52,7 @@ public class ButtonsPanel extends JPanel {
 
         // togglables
         togglables.add(new SnapButton());
-        
+        togglables.add(new GridButton());
         // options
         options.add(new JLabel("Room type:"));
         options.add(RoomButton.getRoomTypeComboBox());

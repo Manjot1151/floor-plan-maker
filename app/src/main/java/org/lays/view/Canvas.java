@@ -27,6 +27,10 @@ public class Canvas extends JLayeredPane {
         return INSTANCE;
     }
     
+    public Grid getGrid() {
+        return grid;
+    }
+
     public GraphicsPanel getGraphicsPanel() {
         return graphicsPanel;
     }
