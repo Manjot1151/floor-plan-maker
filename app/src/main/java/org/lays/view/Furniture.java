@@ -57,13 +57,33 @@ public class Furniture extends Sprite {
     }
 
     private void rotateIntermediate(int numQuadrants) {
-        AffineTransform tx = AffineTransform.getQuadrantRotateInstance(-numQuadrants, image.getWidth() / 2, image.getHeight() / 2);
+        numQuadrants %= 4;
+
+        if (numQuadrants < 0) {
+            numQuadrants += 4;
+        }
+
+        int w0 = image.getWidth();
+        int h0 = image.getHeight();
+        int centerX = w0 / 2;
+        int centerY = h0 / 2;
+
+        if (numQuadrants % 4 == 3) {
+            centerX = h0 / 2;
+            centerY = h0 / 2;
+        } else if (numQuadrants % 4 == 1) {
+            centerX = w0 / 2;
+            centerY = w0 / 2;
+        }
+
+        AffineTransform tx = AffineTransform.getQuadrantRotateInstance(-numQuadrants, centerX, centerY);
         AffineTransformOp txop = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 
         this.image = txop.filter(this.image, null);
         this.selectedImage = txop.filter(this.selectedImage, null);
 
-        setBounds(Utils.rotateRectangle(getBounds(), numQuadrants));
+        Rectangle2D newBounds = Utils.rotateRectangle(bounds, numQuadrants);
+        setBounds(newBounds);
     }
 
     public int getOrientation() {
