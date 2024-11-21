@@ -2,19 +2,24 @@ package org.lays.view.buttons;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 
 import org.lays.snap.SnapCalculator;
 import org.lays.view.ToolButton;
 import org.lays.view.Drawable;
+import org.lays.view.panels.RoomsLayer;
 import org.lays.view.panels.SpritesLayer;
 import org.lays.view.Canvas;
+import org.lays.view.Config;
 import org.lays.view.RoomEdgeDrawable;
 import org.lays.view.EdgeDrawableFactory;
+import org.lays.view.Room;
 
 import java.util.ArrayList;
 
 public abstract class EdgeDrawableButton<T extends RoomEdgeDrawable, F extends EdgeDrawableFactory<T>> extends ToolButton {
-    protected static SpritesLayer spritesPanel = Canvas.getInstance().getSpritesLayer();
+    protected static RoomsLayer roomsLayer = Canvas.getInstance().getRoomsLayer();
+    protected static SpritesLayer spritesLayer = Canvas.getInstance().getSpritesLayer();
     private T currentEdgeDrawable;
     private F factory;
     Class<T> clasz;
@@ -27,32 +32,70 @@ public abstract class EdgeDrawableButton<T extends RoomEdgeDrawable, F extends E
 
     @Override
     public void onMousePressed(MouseEvent e) {
-        Point start = SnapCalculator.calcSnap(e.getPoint());
+        Point2D start = calcSnapToWall(e.getPoint());
         this.currentEdgeDrawable = factory.fromPoints(start, start);
-        spritesPanel.add(currentEdgeDrawable);
+        spritesLayer.add(currentEdgeDrawable);
+    }
+
+    private Point2D calcSnapToWall(Point2D point) {
+        double minDistance = Config.getInstance().getGridSize();
+        double minPointX = point.getX();
+        double minPointY = point.getY();
+        for (Room room : roomsLayer.getRooms()) {
+            double distance;
+            // left wall
+            distance = Math.abs(room.getBounds().getMinX() - point.getX());
+            if (distance < minDistance) {
+                minDistance = distance;
+                minPointX = room.getBounds().getMinX();
+                minPointY = point.getY();
+            }
+            // right wall
+            distance = Math.abs(room.getBounds().getMaxX() - point.getX());
+            if (distance < minDistance) {
+                minDistance = distance;
+                minPointX = room.getBounds().getMaxX();
+                minPointY = point.getY();
+            }
+            // top wall
+            distance = Math.abs(room.getBounds().getMinY() - point.getY());
+            if (distance < minDistance) {
+                minDistance = distance;
+                minPointX = point.getX();
+                minPointY = room.getBounds().getMinY();
+            }
+            // bottom wall
+            distance = Math.abs(room.getBounds().getMaxY() - point.getY());
+            if (distance < minDistance) {
+                minDistance = distance;
+                minPointX = point.getX();
+                minPointY = room.getBounds().getMaxY();
+            }
+        }
+        return new Point2D.Double(minPointX, minPointY);
     }
 
     @Override
     public void onMouseReleased(MouseEvent e) {
         currentEdgeDrawable.setEnd(SnapCalculator.calcSnap(e.getPoint()));
         if (!currentEdgeDrawable.isValidDrawable()) {
-            spritesPanel.remove(currentEdgeDrawable);
+            spritesLayer.remove(currentEdgeDrawable);
         } else {
             mergeDrawableIfPossible(currentEdgeDrawable);
         }
 
-        spritesPanel.getView().repaint();
+        spritesLayer.getView().repaint();
     }
 
     protected void update(Point end) {
         currentEdgeDrawable.setEnd(end);
-        spritesPanel.getView().repaint();
+        spritesLayer.getView().repaint();
     }
 
     public boolean mergeDrawableIfPossible(T edgeDrawable) {
         ArrayList<T> mergeEdgeDrawables = new ArrayList<T>();
 
-        for (Drawable sprite: spritesPanel.getSprites()) {
+        for (Drawable sprite: spritesLayer.getSprites()) {
             if (clasz.isInstance(sprite)) {
                 T testDrawable = clasz.cast(sprite);
 
@@ -97,8 +140,8 @@ public abstract class EdgeDrawableButton<T extends RoomEdgeDrawable, F extends E
         }
 
         mergeEdgeDrawables.add(edgeDrawable);
-        spritesPanel.getSprites().removeAll(mergeEdgeDrawables);
-        spritesPanel.add(mergedEdgeDrawable);
+        spritesLayer.getSprites().removeAll(mergeEdgeDrawables);
+        spritesLayer.add(mergedEdgeDrawable);
 
         return true;
     }
