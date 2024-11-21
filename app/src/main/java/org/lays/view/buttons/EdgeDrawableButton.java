@@ -42,36 +42,71 @@ public abstract class EdgeDrawableButton<T extends RoomEdgeDrawable, F extends E
         double minPointX = point.getX();
         double minPointY = point.getY();
         for (Room room : roomsLayer.getRooms()) {
+            if (room.getBounds().contains(point)) {
+                if (point.getX() - room.getMinX() < minDistance) {
+                    minDistance = point.getX() - room.getMinX();
+                    minPointX = room.getMinX();
+                    minPointY = point.getY();
+                }
+
+                if (room.getMaxX() - point.getX() < minDistance) {
+                    minDistance = room.getMaxX() - point.getX();
+                    minPointX = room.getMaxX();
+                    minPointY = point.getY();
+                }
+
+                if (point.getY() - room.getMinY() < minDistance) {
+                    minDistance = point.getY() - room.getMinY();
+                    minPointX = point.getX();
+                    minPointY = room.getMinY();
+                }
+
+                if (room.getMaxY() - point.getY() < minDistance) {
+                    minDistance = room.getMaxY() - point.getY();
+                    minPointX = point.getX();
+                    minPointY = room.getMaxY();
+                }
+
+                return new Point2D.Double(minPointX, minPointY);
+            }
+
             double distance;
-            // left wall
-            distance = Math.abs(room.getBounds().getMinX() - point.getX());
-            if (distance < minDistance) {
-                minDistance = distance;
-                minPointX = room.getBounds().getMinX();
-                minPointY = point.getY();
+            double distanceX;
+            double distanceY;
+
+            double snapX, snapY;
+
+            if (point.getX() < room.getMinX()) {
+                snapX = room.getMinX();
+                distanceX = snapX - point.getX();
+            } else if (point.getX() > room.getMaxX()) {
+                snapX = room.getMaxX();
+                distanceX = point.getX() - snapX;
+            } else {
+                snapX = point.getX();
+                distanceX = 0;
             }
-            // right wall
-            distance = Math.abs(room.getBounds().getMaxX() - point.getX());
-            if (distance < minDistance) {
-                minDistance = distance;
-                minPointX = room.getBounds().getMaxX();
-                minPointY = point.getY();
+
+            if (point.getY() < room.getMinY()) {
+                snapY = room.getMinY();
+                distanceY = snapY - point.getY();
+            } else if (point.getY() > room.getMaxY()) {
+                snapY = room.getMaxY();
+                distanceY = point.getY() - snapY;
+            } else {
+                snapY = point.getY();
+                distanceY = 0;
             }
-            // top wall
-            distance = Math.abs(room.getBounds().getMinY() - point.getY());
+
+            distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
             if (distance < minDistance) {
                 minDistance = distance;
-                minPointX = point.getX();
-                minPointY = room.getBounds().getMinY();
-            }
-            // bottom wall
-            distance = Math.abs(room.getBounds().getMaxY() - point.getY());
-            if (distance < minDistance) {
-                minDistance = distance;
-                minPointX = point.getX();
-                minPointY = room.getBounds().getMaxY();
+                minPointX = snapX;
+                minPointY = snapY;
             }
         }
+
         return new Point2D.Double(minPointX, minPointY);
     }
 
