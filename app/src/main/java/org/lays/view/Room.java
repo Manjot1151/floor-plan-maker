@@ -43,7 +43,7 @@ public class Room extends Drawable {
     public boolean isOnHorizontalEdge(Point2D point) {
         Rectangle2D roomBounds = getBounds();
         return (
-            point.getX() >= roomBounds.getMinX() && point.getY() <= roomBounds.getMaxX() && 
+            point.getX() >= roomBounds.getMinX() && point.getX() <= roomBounds.getMaxX() && 
             (Double.compare(point.getY(), roomBounds.getMinY()) == 0 || Double.compare(point.getY(), roomBounds.getMaxY()) == 0)
         );
     }
