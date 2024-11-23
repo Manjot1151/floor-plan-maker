@@ -3,6 +3,20 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 public class Utils {
+    public static double EPSILON = 0.0001;
+
+    public static boolean equals(double x1, double x2) {
+        return Math.abs(x1 - x2) < EPSILON;
+    }
+
+    public static boolean gt_equals(double x1, double x2) {
+        return Math.abs(x1 - x2) < EPSILON || x1 > x2;
+    }
+
+    public static boolean lt_equals(double x1, double x2) {
+        return Math.abs(x1 - x2) < EPSILON || x1 < x2;
+    }
+
     public static Rectangle2D rotateRectangle(Rectangle2D rect, int numQuadrants) {
         if (numQuadrants % 2 == 0) {
             return rect;
