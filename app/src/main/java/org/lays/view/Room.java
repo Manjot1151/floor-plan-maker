@@ -40,19 +40,20 @@ public class Room extends Drawable {
         this.roomType = type;
     }
 
+
     public boolean isOnHorizontalEdge(Point2D point) {
         Rectangle2D roomBounds = getBounds();
         return (
-            point.getX() >= roomBounds.getMinX() && point.getX() <= roomBounds.getMaxX() && 
-            (Double.compare(point.getY(), roomBounds.getMinY()) == 0 || Double.compare(point.getY(), roomBounds.getMaxY()) == 0)
+            Utils.gt_equals(point.getX(), roomBounds.getMinX()) && Utils.lt_equals(point.getX(), roomBounds.getMaxX()) && 
+            Utils.equals(point.getY(), roomBounds.getMinY()) || Utils.equals(point.getY(), roomBounds.getMaxY()) 
         );
     }
 
     public boolean isOnVerticalEdge(Point2D point) {
         Rectangle2D roomBounds = getBounds();
         return (
-            point.getY() >= roomBounds.getMinY() && point.getY() <= roomBounds.getMaxY() && 
-            (Double.compare(point.getX(), roomBounds.getMinX()) == 0 || Double.compare(point.getX(), roomBounds.getMaxX()) == 0)
+            Utils.gt_equals(point.getY() , roomBounds.getMinY()) && Utils.lt_equals(point.getY() , roomBounds.getMaxY()) && 
+            Utils.equals(point.getX(), roomBounds.getMinX()) || Utils.equals(point.getX() ,  roomBounds.getMaxX())
         );
     }
 
@@ -121,7 +122,7 @@ public class Room extends Drawable {
 
     public boolean hasValidDimensinons() {
         Rectangle2D bounds = getBounds();
-        return Double.compare(bounds.getWidth(), 0) != 0 && Double.compare(bounds.getHeight(), 0) != 0;
+        return !Utils.equals(bounds.getWidth(), 0) && !Utils.equals(bounds.getHeight(), 0);
     }
 
     public boolean validateSprites() {

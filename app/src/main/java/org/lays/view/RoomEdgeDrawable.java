@@ -64,11 +64,11 @@ public abstract class RoomEdgeDrawable extends Sprite {
     }
 
     public boolean isVertical() {
-        return Double.compare(start.getX(), end.getX()) == 0;
+        return Utils.equals(start.getX(), end.getX());
     }
 
     public boolean isHorizontal() {
-        return Double.compare(start.getY(), end.getY()) == 0;
+        return Utils.equals(start.getY(), end.getY());
     }
 
     public boolean isPoint() {
